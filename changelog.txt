@@ -1,0 +1,6 @@
+
+Version 0.0.2.x
+- support for folders [invoke w/ plugin://plugin.video.firedrive/?mode=folder&amp;folderID=unique_folder_id]
+- support for public URLS [invoke w/ plugin://plugin.video.firedrive/?mode=streamURL&amp;url=http://www.firedrive.com/file/#####]
+Version 0.0.1.x
+- Initial version
