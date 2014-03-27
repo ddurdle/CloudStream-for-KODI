@@ -27,7 +27,7 @@ import cookielib
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 
 # global variables
-addon = xbmcaddon.Addon(id='plugin.video.movpod')
+addon = xbmcaddon.Addon(id='plugin.video.cloudstream')
 
 # helper methods
 def log(msg, err=False):
@@ -183,7 +183,7 @@ class movpod:
     #   returns: list containing the header
     ##
     def getHeadersList(self):
-        if (self.cookie != '' or self.cookie != 0):
+        if (self.auth != '' or self.auth != 0):
             return { 'User-Agent' : self.user_agent, 'Cookie' : 'auth='+self.auth+'; exp=1' }
         else:
             return { 'User-Agent' : self.user_agent }
@@ -352,7 +352,9 @@ class movpod:
                   'usr_login' : usr_login,
                   'id' : id,
                   'fname' : fname,
-                  'referer' : referer
+                  'referer' : referer,
+                  'method_free' : 'Free Download'
+
         }
 
         req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList())

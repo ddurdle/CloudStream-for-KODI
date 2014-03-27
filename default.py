@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from resources.lib import cloudstream
+from resources.lib import movpod
 import sys
 import urllib
 import cgi
@@ -112,7 +112,6 @@ except :
 username = addon.getSetting('username')
 password = addon.getSetting('password')
 auth_token = addon.getSetting('auth_token')
-auth_cookie = addon.getSetting('auth_cookie')
 user_agent = addon.getSetting('user_agent')
 save_auth_token = addon.getSetting('save_auth_token')
 
@@ -131,7 +130,6 @@ save_auth_token = addon.getSetting('save_auth_token')
 #   auth_token will permit "quicker" login in future executions by reusing the existing login session (less HTTPS calls = quicker video transitions between clips)
 #if auth_token == '' and save_auth_token == 'true':
 #    addon.setSetting('auth_token', cloudstream.auth)
-#    addon.setSetting('auth_cookie', cloudstream.cookie)
 
 
 
@@ -145,7 +143,7 @@ mode = plugin_queries['mode']
 if mode == 'main' or mode == 'folder':
     log(mode)
 
-    movpod = movpod.movpod(username, password, auth_token, auth_cookie, user_agent)
+    movpod = movpod.movpod(username, password, auth_token, user_agent)
     folderID=0
     if (mode == 'folder'):
         folderID = plugin_queries['folderID']
@@ -156,9 +154,9 @@ if mode == 'main' or mode == 'folder':
 
 #    videos = cloudstream.getVideosList()
     videoURL = movpod.getPublicLink('http://movpod.in/89qq916c069c')
-    addVideo(videoURL,
-                             { 'title' : url , 'plot' : title }, url,
-                             img=None)
+#    addVideo(videoURL,
+#                             { 'title' : url , 'plot' : title }, url,
+#                             img=None)
 
 #    folders = cloudstream.getFolderList(folderID)
 #    for title in sorted(folders.iterkeys()):
@@ -166,33 +164,11 @@ if mode == 'main' or mode == 'folder':
 
 #    videos = cloudstream.getVideosList(folderID)
 #    for title in sorted(videos.iterkeys()):
-#      addVideo(videos[title]['url'],
-#                             { 'title' : title , 'plot' : title }, title,
-#                             img=videos[title]['thumbnail'])
-
-#play a URL that is passed in (presumely requires authorizated session)
-elif mode == 'play':
-    url = plugin_queries['url']
-
-    item = xbmcgui.ListItem(path=url)
-    log('play url: ' + url)
-    xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
-
-#play a video given its exact-title
-elif mode == 'playvideo' or mode == 'playVideo':
-    title = plugin_queries['title']
-    cacheType = addon.getSetting('playback_type')
-
-    if cacheType == '0':
-      videoURL = cloudstream.getVideoLink(title)
-    else:
-      videoURL = cloudstream.getVideoLink(title,True,cacheType)
-
+    addVideo(videoURL,
+                             { 'title' : 'play' , 'plot' : 'play' }, 'play')
     item = xbmcgui.ListItem(path=videoURL)
     log('play url: ' + videoURL)
     xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
-
-
 
 #force stream - play a video given its exact-title
 elif mode == 'streamVideo' or mode == 'streamvideo':
@@ -226,14 +202,6 @@ elif mode == 'streamURL' or mode == 'streamurl':
 #clear the authorization token
 elif mode == 'clearauth':
     addon.setSetting('auth_token', '')
-    addon.setSetting('auth_cookie', '')
-
-
-
-# update the authorization token in the configuration file if we had to login for a new one during this execution run
-if auth_token != cloudstream.auth and save_auth_token == 'true':
-    addon.setSetting('auth_token', cloudstream.auth)
-    addon.setSetting('auth_cookie', cloudstream.cookie)
 
 
 xbmcplugin.endOfDirectory(plugin_handle)
