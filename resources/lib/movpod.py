@@ -43,10 +43,15 @@ def log(msg, err=False):
 class movpod:
 
 
+    # magic numbers
+    MEDIA_TYPE_VIDEO = 1
+    MEDIA_TYPE_FOLDER = 0
+
     ##
     # initialize (setting 1) username, 2) password, 3) authorization token, 4) user agent string
     ##
-    def __init__(self, user, password, auth, user_agent):
+    def __init__(self, domain, user, password, auth, user_agent):
+        self.domain = domain
         self.user = user
         self.password = password
         self.auth = auth
@@ -61,7 +66,7 @@ class movpod:
           return
         else:
           log('no token - logging in')
-#          self.login();
+          self.login();
           return
 
 
@@ -77,66 +82,14 @@ class movpod:
         # default User-Agent ('Python-urllib/2.6') will *not* work
         opener.addheaders = [('User-Agent', self.user_agent)]
 
-        url = 'http://www.movpod.com/authenticate.php?login'
-
-        try:
-            response = opener.open(url)
-
-        except urllib2.URLError, e:
-            log(str(e), True)
-            return
-        response_data = response.read()
-        response.close()
-
-        # fetch captcha url
-        for r in re.finditer('<td>(CAPTCHA)</td>.*?<td><img src="([^\"]+)\"',
-                             response_data, re.DOTALL):
-            ceptchaType,captchaURL = r.groups()
-
-        url = 'http://www.movpod.com' + captchaURL
-
-        try:
-            response = opener.open(url)
-        except urllib2.URLError, e:
-                log(str(e), True)
-
-        output = open('/tmp/test.png','wb')
-        output.write(response.read())
-        output.close()
-        response.close()
-
-
-
-        img = xbmcgui.ControlImage(450,15,400,130,  '/tmp/test.png')
-        wdlg = xbmcgui.WindowDialog()
-        wdlg.addControl(img)
-        wdlg.show()
-
-        xbmc.sleep(3000)
-
-        kb = xbmc.Keyboard('', 'Type the letters in the image', False)
-        kb.doModal()
-        capcode = kb.getText()
-
-        if (kb.isConfirmed()):
-           userInput = kb.getText()
-           if userInput != '':
-               solution = kb.getText()
-           elif userInput == '':
-               raise Exception ('You must enter text in the image to access video')
-        else:
-           raise Exception ('Captcha Error')
-        wdlg.close()
-
-
-        url = 'http://www.movpod.com/authenticate.php?login'
+        url = 'http://'+self.domain+'/'
 
         values = {
-                  'pass' : self.password,
-                  'user' : self.user,
-                  'remember' : 1,
-                  'captcha_code' : solution,
-                  'login_submit' : 'Login',
+                  'op' : 'login',
+                  'redirect' : '',
+                  'login' : self.user,
+                  'redirect' : 'http://' + self.domain + '/',
+                  'password' : self.password
         }
 
         log('logging in')
@@ -155,13 +108,13 @@ class movpod:
         response.close()
 
 
-        loginResult = 0
+        loginResult = False
         #validate successful login
-        for r in re.finditer('class="(header-right-auth)"><strong>([^\<]+)</strong>',
+        for r in re.finditer('my_account',
                              response_data, re.DOTALL):
-            loginType,loginResult = r.groups()
+            loginResult = True
 
-        if (loginResult == 0 or loginResult != self.user):
+        if (loginResult == False):
             xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30017))
             log('login failed', True)
             return
@@ -170,7 +123,7 @@ class movpod:
             for r in re.finditer(' ([^\=]+)\=([^\s]+)\s',
                         str(cookie), re.DOTALL):
                 cookieType,cookieValue = r.groups()
-                if cookieType == 'auth':
+                if cookieType == 'xfss':
                     self.auth = cookieValue
 
 
@@ -184,7 +137,7 @@ class movpod:
     ##
     def getHeadersList(self):
         if (self.auth != '' or self.auth != 0):
-            return { 'User-Agent' : self.user_agent, 'Cookie' : 'auth='+self.auth+'; exp=1' }
+            return { 'User-Agent' : self.user_agent, 'Cookie' : 'lang=english; login='+self.user+'; xfss='+self.auth+';' }
         else:
             return { 'User-Agent' : self.user_agent }
 
@@ -203,7 +156,11 @@ class movpod:
     def getVideosList(self, folderID=0, cacheType=0):
 
         # retrieve all documents
-        url = 'http://www.movpod.com/cp.php'
+        if folderID == 0:
+            url = 'http://'+self.domain+'/?op=my_files'
+        else:
+            url = 'http://'+self.domain+'/?op=my_files&fld_id='+folderID
+
 
         videos = {}
         if True:
@@ -232,82 +189,32 @@ class movpod:
 
             # parsing page for videos
             # video-entry
-            for r in re.finditer('input name="file_\d+" type="checkbox" value="([^\"]+)"></td>.*?<div style="background-image:url\(([^\)]+)\);.*?<strong><a href="[^\"]+">([^\<]+)</a>' ,
+            for r in re.finditer('<a id="([^\"]+)" href="([^\"]+)">([^\<]+)</a>' ,
                                  response_data, re.DOTALL):
-                fileID,img,title = r.groups()
+                fileID,url,fileName = r.groups()
 
 
-                log('found video %s %s' % (title, fileID))
+                log('found video %s %s' % (fileName, url))
 
                 # streaming
-                videos[title] = {'url': 'plugin://plugin.video.movpod?mode=streamVideo&filename=' + fileID, 'thumbnail' : img}
+                videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
+
+            # folder-entry
+            for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
+                                 response_data, re.DOTALL):
+                folderID,folderName = r.groups()
+
+
+                log('found folder %s %s' % (folderName, url))
+
+                # folder
+                if folderID != 0:
+                    videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
 
 
 
         return videos
 
-
-    ##
-    # retrieve a list of folders
-    #   parameters: folder is the current folderID
-    #   returns: list of videos
-    ##
-    def getFolderList(self, folderID=0):
-
-        # retrieve all documents
-        params = urllib.urlencode({'getFolders': folderID, 'format': 'large', 'term': '', 'group':0, 'user_token': self.auth, '_': 1394486104901})
-
-        url = 'http://www.movpod.in/'+ params
-
-        folders = {}
-        if True:
-            log('url = %s header = %s' % (url, self.getHeadersList()))
-            req = urllib2.Request(url, None, self.getHeadersList())
-
-            # if action fails, validate login
-            try:
-              response = urllib2.urlopen(req)
-            except urllib2.URLError, e:
-              if e.code == 403 or e.code == 401:
-                self.login()
-                req = urllib2.Request(url, None, self.getHeadersList())
-                try:
-                  response = urllib2.urlopen(req)
-                except urllib2.URLError, e:
-                  log(str(e), True)
-                  return
-              else:
-                log(str(e), True)
-                return
-
-            response_data = response.read()
-
-            # parsing page for videos
-            # video-entry
-            for r in re.finditer('"f_id":"([^\"]+)".*?"f_fullname":"([^\"]+)"' ,response_data, re.DOTALL):
-                folderID, folderName = r.groups()
-
-                log('found folder %s %s' % (folderID, folderName))
-
-                # streaming
-                folders[folderName] = 'plugin://plugin.video.movpod?mode=folder&folderID=' + folderID
-
-            response.close()
-
-        return folders
-
-
-
-    ##
-    # retrieve a video link
-    #   parameters: title of video, whether to prompt for quality/format (optional), cache type (optional)
-    #   returns: list of URLs for the video or single URL of video (if not prompting for quality)
-    ##
-    def getVideoLink(self,filename,cacheType=0):
-
-
-
-        return 'http://dl.movpod.com/?alias='+filename+'&stream' + '|'+self.getHeadersEncoded()
 
     ##
     # retrieve a video link

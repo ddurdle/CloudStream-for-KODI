@@ -139,11 +139,15 @@ log('plugin handle: ' + str(plugin_handle))
 
 mode = plugin_queries['mode']
 
+movpod = movpod.movpod('gorillavid.in',username, password, auth_token, user_agent)
+
+# make mode case-insensitive
+mode = mode.lower()
+
 #dump a list of videos available to play
 if mode == 'main' or mode == 'folder':
     log(mode)
 
-    movpod = movpod.movpod(username, password, auth_token, user_agent)
     folderID=0
     if (mode == 'folder'):
         folderID = plugin_queries['folderID']
@@ -152,26 +156,22 @@ if mode == 'main' or mode == 'folder':
 
     cacheType = addon.getSetting('playback_type')
 
-#    videos = cloudstream.getVideosList()
-    videoURL = movpod.getPublicLink('http://movpod.in/89qq916c069c')
-#    addVideo(videoURL,
-#                             { 'title' : url , 'plot' : title }, url,
-#                             img=None)
+    videos = movpod.getVideosList(folderID=folderID)
 
-#    folders = cloudstream.getFolderList(folderID)
-#    for title in sorted(folders.iterkeys()):
-#      addDirectory(folders[title],title)
+    for title in sorted(videos.iterkeys()):
+        if videos[title]['mediaType'] == movpod.MEDIA_TYPE_VIDEO:
+            addVideo(videos[title]['url'],
+                             { 'title' : title , 'plot' : title }, title)
+        else:
+            addDirectory(videos[title]['url'],title)
 
-#    videos = cloudstream.getVideosList(folderID)
-#    for title in sorted(videos.iterkeys()):
-    addVideo(videoURL,
-                             { 'title' : 'play' , 'plot' : 'play' }, 'play')
-    item = xbmcgui.ListItem(path=videoURL)
-    log('play url: ' + videoURL)
-    xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
+
+#    item = xbmcgui.ListItem(path=videoURL)
+#    log('play url: ' + videoURL)
+#    xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
 #force stream - play a video given its exact-title
-elif mode == 'streamVideo' or mode == 'streamvideo':
+elif mode == 'streamvideo':
     try:
       filename = plugin_queries['filename']
     except:
@@ -179,12 +179,12 @@ elif mode == 'streamVideo' or mode == 'streamvideo':
 
 
     # immediately play resulting (is a video)
-    videoURL = cloudstream.getVideoLink(filename)
+    videoURL = mod.getVideoLink(filename)
     item = xbmcgui.ListItem(path=videoURL)
     log('play url: ' + videoURL)
     xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
-elif mode == 'streamURL' or mode == 'streamurl':
+elif mode == 'streamurl':
     try:
       url = plugin_queries['url']
     except:
@@ -192,16 +192,19 @@ elif mode == 'streamURL' or mode == 'streamurl':
 
 
     # immediately play resulting (is a video)
-    videoURL = cloudstream.getPublicLink(url)
+    videoURL = movpod.getPublicLink(url)
     item = xbmcgui.ListItem(path=videoURL)
     log('play url: ' + videoURL)
     xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
 
-
 #clear the authorization token
 elif mode == 'clearauth':
     addon.setSetting('auth_token', '')
+
+# update the authorization token in the configuration file if we had to login for a new one during this execution run
+if auth_token != movpod.auth and save_auth_token == 'true':
+    addon.setSetting('auth_token', movpod.auth)
 
 
 xbmcplugin.endOfDirectory(plugin_handle)
