@@ -16,7 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from resources.lib import movpod
+from resources.lib import  cloudservice
+from resources.lib import  xfilesharing
 import sys
 import urllib
 import cgi
@@ -139,7 +140,7 @@ log('plugin handle: ' + str(plugin_handle))
 
 mode = plugin_queries['mode']
 
-movpod = movpod.movpod('gorillavid.in',username, password, auth_token, user_agent)
+cloudservice = xfilesharing.xfilesharing('gorillavid.in',username, password, auth_token, user_agent)
 
 # make mode case-insensitive
 mode = mode.lower()
@@ -156,10 +157,10 @@ if mode == 'main' or mode == 'folder':
 
     cacheType = addon.getSetting('playback_type')
 
-    videos = movpod.getVideosList(folderID=folderID)
+    videos = cloudservice.getVideosList(folderID=folderID)
 
     for title in sorted(videos.iterkeys()):
-        if videos[title]['mediaType'] == movpod.MEDIA_TYPE_VIDEO:
+        if videos[title]['mediaType'] == cloudservice.MEDIA_TYPE_VIDEO:
             addVideo(videos[title]['url'],
                              { 'title' : title , 'plot' : title }, title)
         else:
@@ -179,7 +180,7 @@ elif mode == 'streamvideo':
 
 
     # immediately play resulting (is a video)
-    videoURL = mod.getVideoLink(filename)
+    videoURL = cloudservice.getVideoLink(filename)
     item = xbmcgui.ListItem(path=videoURL)
     log('play url: ' + videoURL)
     xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
@@ -192,7 +193,7 @@ elif mode == 'streamurl':
 
 
     # immediately play resulting (is a video)
-    videoURL = movpod.getPublicLink(url)
+    videoURL = cloudservice.getPublicLink(url)
     item = xbmcgui.ListItem(path=videoURL)
     log('play url: ' + videoURL)
     xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
@@ -203,8 +204,8 @@ elif mode == 'clearauth':
     addon.setSetting('auth_token', '')
 
 # update the authorization token in the configuration file if we had to login for a new one during this execution run
-if auth_token != movpod.auth and save_auth_token == 'true':
-    addon.setSetting('auth_token', movpod.auth)
+if auth_token != cloudservice.auth and save_auth_token == 'true':
+    addon.setSetting('auth_token', cloudservice.auth)
 
 
 xbmcplugin.endOfDirectory(plugin_handle)

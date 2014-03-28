@@ -18,4 +18,12 @@
     <string id="30015">Set the Username and Password in addon settings before running.</string>
     <string id="30016">You must add org.python.pydev.debug.pysrc to your PYTHONPATH.</string>
     <string id="30017">Login information is incorrect or permission is denied</string>
+    <string id="30020">xfilesharing</string>
+    <string id="30021">daclips</string>
+    <string id="30022">flashx</string>
+    <string id="30023">gorillavid</string>
+    <string id="30024">movpod</string>
+    <string id="30025">promptfile</string>
+    <string id="30026">thefile</string>
 </strings>
+

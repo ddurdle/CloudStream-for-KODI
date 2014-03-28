@@ -1,5 +1,5 @@
 '''
-    movpod XBMC Plugin
+    xfilesharing XBMC Plugin
     Copyright (C) 2013 dmdsoftware
 
     This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
 
 '''
 
+import cloudservice
 import os
 import re
 import urllib, urllib2
@@ -40,7 +41,7 @@ def log(msg, err=False):
 #
 #
 #
-class movpod:
+class xfilesharing(cloudservice.cloudservice):
 
 
     # magic numbers
@@ -51,23 +52,8 @@ class movpod:
     # initialize (setting 1) username, 2) password, 3) authorization token, 4) user agent string
     ##
     def __init__(self, domain, user, password, auth, user_agent):
-        self.domain = domain
-        self.user = user
-        self.password = password
-        self.auth = auth
-        self.user_agent = user_agent
-        self.cookiejar = cookielib.CookieJar()
-
-
-        # if we have an authorization token set, try to use it
-        if auth != '':
-          log('using token')
-
-          return
-        else:
-          log('no token - logging in')
-          self.login();
-          return
+        return super(xfilesharing,self).__init__(domain, user, password, auth, user_agent)
+        #return cloudservice.__init__(self,domain, user, password, auth, user_agent)
 
 
 
@@ -76,7 +62,7 @@ class movpod:
     ##
     def login(self):
 
-        self.auth = ''
+        cloudservice.login(self)
 
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar))
         # default User-Agent ('Python-urllib/2.6') will *not* work
@@ -204,11 +190,10 @@ class movpod:
                                  response_data, re.DOTALL):
                 folderID,folderName = r.groups()
 
-
                 log('found folder %s %s' % (folderName, url))
 
                 # folder
-                if folderID != 0:
+                if int(folderID) != 0:
                     videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
 
 
