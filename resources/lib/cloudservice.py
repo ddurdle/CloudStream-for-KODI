@@ -62,7 +62,9 @@ class cloudservice(object):
 
 
         # if we have an authorization token set, try to use it
-        if auth != '':
+        if user == '':
+            return
+        elif auth != '':
           log('using token')
 
           return

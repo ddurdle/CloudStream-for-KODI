@@ -62,8 +62,6 @@ class xfilesharing(cloudservice.cloudservice):
     ##
     def login(self):
 
-        cloudservice.login(self)
-
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar))
         # default User-Agent ('Python-urllib/2.6') will *not* work
         opener.addheaders = [('User-Agent', self.user_agent)]
