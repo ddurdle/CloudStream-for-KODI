@@ -51,8 +51,8 @@ class xfilesharing(cloudservice.cloudservice):
     ##
     # initialize (setting 1) username, 2) password, 3) authorization token, 4) user agent string
     ##
-    def __init__(self, domain, user, password, auth, user_agent):
-        return super(xfilesharing,self).__init__(domain, user, password, auth, user_agent)
+    def __init__(self, name, domain, user, password, auth, user_agent):
+        return super(xfilesharing,self).__init__(name, domain, user, password, auth, user_agent)
         #return cloudservice.__init__(self,domain, user, password, auth, user_agent)
 
 
@@ -181,7 +181,7 @@ class xfilesharing(cloudservice.cloudservice):
                 log('found video %s %s' % (fileName, url))
 
                 # streaming
-                videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
+                videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
 
             # folder-entry
             for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
@@ -192,7 +192,7 @@ class xfilesharing(cloudservice.cloudservice):
 
                 # folder
                 if int(folderID) != 0:
-                    videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
+                    videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
 
 
 

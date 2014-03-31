@@ -81,7 +81,21 @@ def decode_dict(data):
             data[k] = decode(v)
     return data
 
+def numberOfAccounts(accountType):
 
+    count = 1
+    max_count = int(addon.getSetting(accountType+'_numaccounts'))
+    actualCount = 0
+    while True:
+        try:
+            if addon.getSetting(accountType+str(count)+'_username') != '':
+                actualCount = actualCount + 1
+        except:
+            break
+        if count == max_count:
+            break
+        count = count + 1
+    return actualCount
 
 #global variables
 plugin_url = sys.argv[0]
@@ -120,12 +134,10 @@ log('plugin handle: ' + str(plugin_handle))
 
 mode = plugin_queries['mode']
 
-
-containerAccounts = {"1": 'daclips.in', '2': 'flashx.tv', '3': 'gorillavid.in','4': 'movpod.in','5': 'promptfile.com','6': 'thefile.me',}
-
 # make mode case-insensitive
 mode = mode.lower()
 
+accounts = []
 #dump a list of videos available to play
 if mode == 'main' or mode == 'folder':
     log(mode)
@@ -134,42 +146,93 @@ if mode == 'main' or mode == 'folder':
     if (mode == 'folder'):
         folderID = plugin_queries['folderID']
 
+    instanceName = ''
     try:
-        domain = addon.getSetting('xfilesharing1_domain')
-        custom_domain = addon.getSetting('xfilesharing1_custom_domain')
-        username = addon.getSetting('xfilesharing1_username')
-        password = addon.getSetting('xfilesharing1_password')
-        save_auth  = addon.getSetting('xfilesharing1_save_auth')
-        auth_token = addon.getSetting('xfilesharing1_auth_token')
-    except :
+        instanceName = plugin_queries['instance']
+    except:
         pass
 
+    numberOfAccounts = numberOfAccounts('xfilesharing')
 
-    cloudservice = xfilesharing.xfilesharing(domain,username, password, auth_token, user_agent)
+    # show list of services
+    if numberOfAccounts > 1 and instanceName == '':
+        count = 1
+        max_count = int(addon.getSetting('xfilesharing_numaccounts'))
+        while True:
+            instanceName = 'xfilesharing'+str(count)
+            try:
+                username = addon.getSetting(instanceName+'_username')
+                if username != '':
+                    domain = addon.getSetting(instanceName+'_domain')
+                    if domain == 'CUSTOM':
+                        domain = addon.getSetting(instanceName+'_custom_domain')
+                    addDirectory('plugin://plugin.video.cloudstream?mode=main&instance='+instanceName,domain + '-'+username)
+            except:
+                break
+            if count == max_count:
+                break
+            count = count + 1
 
+    else:
+        cloudservice = ''
+        # show index of accounts
+        if instanceName == '' and numberOfAccounts == 1:
 
-    cacheType = addon.getSetting('playback_type')
+                count = 1
+                max_count = int(addon.getSetting('xfilesharing_numaccounts'))
+                while True:
+                    instanceName = 'xfilesharing'+str(count)
+                    try:
+                        username = addon.getSetting(instanceName+'_username')
+                        if username != '':
+                            domain = addon.getSetting(instanceName+'_domain')
+                            custom_domain = addon.getSetting(instanceName+'_custom_domain')
+                            password  = addon.getSetting(instanceName+'_password')
+                            save_auth  = addon.getSetting(instanceName+'_save_auth')
+                            auth_token = addon.getSetting(instanceName+'_auth_token')
+                            update_token_name = instanceName+'_auth_token'
+                            cloudservice = xfilesharing.xfilesharing(instanceName, domain, username, password, auth_token, user_agent)
+                    except :
+                        break
+                    if count == max_count:
+                        break
+                    count = count + 1
 
-    singlePlayback=''
-    videos = cloudservice.getVideosList(folderID=folderID)
+        # show entries of a single account (such as folder)
+        elif instanceName != '':
 
-    for title in sorted(videos.iterkeys()):
-        if videos[title]['mediaType'] == cloudservice.MEDIA_TYPE_VIDEO:
-            addVideo(videos[title]['url'],
+                    username = addon.getSetting(instanceName+'_username')
+                    domain = addon.getSetting(instanceName+'_domain')
+                    custom_domain = addon.getSetting(instanceName+'_custom_domain')
+                    password  = addon.getSetting(instanceName+'_password')
+                    save_auth  = addon.getSetting(instanceName+'_save_auth')
+                    auth_token = addon.getSetting(instanceName+'_auth_token')
+                    update_token_name = instanceName+'_auth_token'
+                    cloudservice = xfilesharing.xfilesharing(instanceName, domain, username, password, auth_token, user_agent)
+
+        cacheType = addon.getSetting('playback_type')
+
+        singlePlayback=''
+        videos = cloudservice.getVideosList(folderID=folderID)
+
+        for title in sorted(videos.iterkeys()):
+            if videos[title]['mediaType'] == cloudservice.MEDIA_TYPE_VIDEO:
+                addVideo(videos[title]['url'],
                              { 'title' : title , 'plot' : title }, title)
-            if singlePlayback == '':
-                singlePlayback = title
-        else:
-            addDirectory(videos[title]['url'],title)
+                if singlePlayback == '':
+                    singlePlayback = title
+            else:
+                addDirectory(videos[title]['url'],title)
 
+        if singlePlayback != '':
+            item = xbmcgui.ListItem(path=videos[singlePlayback]['url'])
+            log('play url: ' + singlePlayback)
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
-    item = xbmcgui.ListItem(path=videos[singlePlayback]['url'])
-    log('play url: ' + singlePlayback)
-    xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
+        # update the authorization token in the configuration file if we had to login for a new one during this execution run
+        if auth_token != cloudservice.auth and save_auth == 'true':
+            addon.setSetting(cloudservice.instanceName+'_auth_token', cloudservice.auth)
 
-    # update the authorization token in the configuration file if we had to login for a new one during this execution run
-    if auth_token != cloudservice.auth and save_auth == 'true':
-        addon.setSetting('xfilesharing1_auth_token', cloudservice.auth)
 
 #force stream - play a video given its exact-title
 elif mode == 'streamvideo':
@@ -188,20 +251,20 @@ elif mode == 'streamvideo':
 elif mode == 'streamurl':
     try:
       url = plugin_queries['url']
+      instanceName = plugin_queries['instance']
     except:
       url = 0
 
     try:
-        domain = addon.getSetting('xfilesharing1_domain')
-        custom_domain = addon.getSetting('xfilesharing1_custom_domain')
-        username = addon.getSetting('xfilesharing1_username')
-        password = addon.getSetting('xfilesharing1_password')
-        save_auth  = addon.getSetting('xfilesharing1_save_auth')
-        auth_token = addon.getSetting('xfilesharing1_auth_token')
+        domain = addon.getSetting(instanceName+'_domain')
+        custom_domain = addon.getSetting(instanceName+'_custom_domain')
+        username = addon.getSetting(instanceName+'_username')
+        password = addon.getSetting(instanceName+'_password')
+        save_auth  = addon.getSetting(instanceName+'_save_auth')
+        auth_token = addon.getSetting(instanceName+'_auth_token')
+        cloudservice = xfilesharing.xfilesharing(instanceName,domain,username, password, auth_token, user_agent)
     except :
         pass
-
-    cloudservice = xfilesharing.xfilesharing(domain,'', '', '', user_agent)
 
     # immediately play resulting (is a video)
     videoURL = cloudservice.getPublicLink(url)
@@ -209,6 +272,9 @@ elif mode == 'streamurl':
     log('play url: ' + videoURL)
     xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
+    # update the authorization token in the configuration file if we had to login for a new one during this execution run
+    if auth_token != cloudservice.auth and save_auth == 'true':
+        addon.setSetting(cloudservice.instanceName+'_auth_token', cloudservice.auth)
 
 #clear the authorization token
 elif mode == 'clearauth':

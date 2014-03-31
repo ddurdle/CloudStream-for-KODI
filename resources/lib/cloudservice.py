@@ -52,7 +52,8 @@ class cloudservice(object):
     ##
     # initialize (setting 1) domain 2) username, 3) password, 4) authorization token, 5) user agent string
     ##
-    def __init__(self, domain, user, password, auth, user_agent):
+    def __init__(self, name, domain, user, password, auth, user_agent):
+        self.instanceName = name
         self.domain = domain
         self.user = user
         self.password = password

@@ -5,6 +5,7 @@
     </category>
 
     <category label="30020">
+    	<setting id="xfilesharing_numaccounts" type="integer" hidden="true" default="6" label="30007" />
     	<setting id="accounts" type="labelenum" values="1|2|3|4|5|6" default="1" label="30007" />
         <setting label="30030" visible="eq(-1,0)" type="lsep"/>
 	   	<setting id="xfilesharing1_domain" type="labelenum" label="30003" visible="eq(-2,0)" lvalues="30021|30022|30023|30024|30025|30026|30018" default="1"/>
