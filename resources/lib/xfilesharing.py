@@ -28,14 +28,16 @@ import cookielib
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 
 # global variables
-addon = xbmcaddon.Addon(id='plugin.video.cloudstream')
+PLUGIN_NAME = 'plugin.video.gdrive'
+PLUGIN_URL = 'plugin://'+PLUGIN_NAME+'/'
+ADDON = xbmcaddon.Addon(id=PLUGIN_NAME)
 
 # helper methods
 def log(msg, err=False):
     if err:
-        xbmc.log(addon.getAddonInfo('name') + ': ' + msg, xbmc.LOGERROR)
+        xbmc.log(ADDON.getAddonInfo('name') + ': ' + msg, xbmc.LOGERROR)
     else:
-        xbmc.log(addon.getAddonInfo('name') + ': ' + msg, xbmc.LOGDEBUG)
+        xbmc.log(ADDON.getAddonInfo('name') + ': ' + msg, xbmc.LOGDEBUG)
 
 
 #
@@ -109,7 +111,8 @@ class xfilesharing(cloudservice.cloudservice):
                 cookieType,cookieValue = r.groups()
                 if cookieType == 'xfss':
                     self.auth = cookieValue
-
+                if cookieType == 'xfsts':
+                    self.auth = cookieValue
 
         return
 
@@ -119,9 +122,11 @@ class xfilesharing(cloudservice.cloudservice):
     # return the appropriate "headers" for FireDrive requests that include 1) user agent, 2) authorization cookie
     #   returns: list containing the header
     ##
-    def getHeadersList(self):
-        if (self.auth != '' or self.auth != 0):
-            return { 'User-Agent' : self.user_agent, 'Cookie' : 'lang=english; login='+self.user+'; xfss='+self.auth+';' }
+    def getHeadersList(self,referer=''):
+        if ((self.auth != '' or self.auth != 0) and referer == ''):
+            return { 'User-Agent' : self.user_agent, 'Cookie' : 'lang=english; login='+self.user+'; xfsts='+self.auth+'; xfss='+self.auth+';' }
+        elif (self.auth != '' or self.auth != 0):
+            return { 'User-Agent' : self.user_agent, 'Referer': referer, 'Cookie' : 'lang=english; login='+self.user+'; xfsts='+self.auth+'; xfss='+self.auth+';' }
         else:
             return { 'User-Agent' : self.user_agent }
 
@@ -183,6 +188,17 @@ class xfilesharing(cloudservice.cloudservice):
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
 
+            # video-entry - bestream
+            for r in re.finditer('<TD align=left>[^\<]+<a href="([^\"]+)">([^\<]+)</a>' ,
+                                 response_data, re.DOTALL):
+                url,fileName = r.groups()
+
+
+                log('found video %s %s' % (fileName, url))
+
+                # streaming
+                videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
+
             # folder-entry
             for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
                                  response_data, re.DOTALL):
@@ -232,12 +248,11 @@ class xfilesharing(cloudservice.cloudservice):
 
 
         confirmID = 0
+        values = {}
         # fetch video title, download URL and docid for stream link
         for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="usr_login" value="([^\"]*)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="fname" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">' ,response_data, re.DOTALL):
              op,usr_login,id,fname,referer = r.groups()
-
-
-        values = {
+             values = {
                   'op' : op,
                   'usr_login' : usr_login,
                   'id' : id,
@@ -245,9 +260,25 @@ class xfilesharing(cloudservice.cloudservice):
                   'referer' : referer,
                   'method_free' : 'Free Download'
 
-        }
+             }
 
-        req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList())
+
+        for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="usr_login" value="([^\"]*)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="fname" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="hash" value="([^\"]*)">.*?<input type="submit" name="imhuman" value="([^\"]*)" id="btn_download">' ,response_data, re.DOTALL):
+             op,usr_login,id,fname,referer,hash,submit = r.groups()
+             values = {
+                  'op' : op,
+                  'usr_login' : usr_login,
+                  'id' : id,
+                  'fname' : fname,
+                  'referer' : referer,
+                  'hash' : hash,
+                  'imhuman' : submit
+
+             }
+
+
+        req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
+        #req = urllib2.Request(url, 'op=download1&usr_login=&id=lo9l3adb0c6c&fname=bates.motel.s02e05.hdtv.x264-killers.mp4&referer=&hash=487600-108-175-1396380862-817c0e0c32cc12f481bfb44df3399791&imhuman=Proceed+to+video', self.getHeadersList())
 
 
         # if action fails, validate login
@@ -269,14 +300,16 @@ class xfilesharing(cloudservice.cloudservice):
         response_data = response.read()
         response.close()
 
-        streamURL = 0
-        # fetch video title, download URL and docid for stream link
-        for r in re.finditer('(file)\: \"([^\"]+)"\,' ,response_data, re.DOTALL):
-             streamType,streamURL = r.groups()
+        if self.domain == 'thefile.me':
+            for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
+                deliminator,fileID = r.groups()
+            streamURL = 'http://d.thefile.me/d/'+fileID+'/video.mp4'
+        else:
+            streamURL = 0
+            # fetch video title, download URL and docid for stream link
+            for r in re.finditer('(file)\: \"([^\"]+)"\,' ,response_data, re.DOTALL):
+                streamType,streamURL = r.groups()
 
 
         return streamURL
-
-
-
 

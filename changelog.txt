@@ -1,3 +1,10 @@
+Version 0.0.2
+- public beta
+- add support for daclips.in (my account videos & public URL)
+- add support for gorillavid.in (my account videos & public URL)
+- add support for movpod.in (my account videos & public URL)
+- add support for thefile.me (my account videos & public URL)
+- add support for bestreams.net (my account videos & public URL)
 - support for multiple accounts
 Version 0.0.1
 - Initial version
