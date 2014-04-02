@@ -1,3 +1,4 @@
+Version 0.0.4
 - add support for filenuke.com (login & public URL)
 - add support for sharesix.com (login & public URL)
 - add support for mightyupload.com (login & public URL)
