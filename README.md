@@ -10,6 +10,8 @@ XFileSharing Pro
 - movpod.in (my account videos & public URL)
 - thefile.me (my account videos & public URL)
 - bestreams.net (my account videos & public URL)
+- uptobox.com (my account videos & public URL)
+- sharerepo.com (my account videos & public URL)
 
 Supports [Tested on]:
 All XBMC 12, 12.2, 13 including Linux, Windows, OS X, Android, Pivos, iOS (including ATV2), Raspberry Pi

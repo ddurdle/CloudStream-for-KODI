@@ -188,6 +188,16 @@ class xfilesharing(cloudservice.cloudservice):
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
 
+            for r in re.finditer('<input type="checkbox" name="file_id".*?<a href="([^\"]+)">([^\<]+)</a>' ,
+                                 response_data, re.DOTALL):
+                url,fileName = r.groups()
+
+
+                log('found video %s %s' % (fileName, url))
+
+                # streaming
+                videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
+
             # video-entry - bestream
             for r in re.finditer('<TD align=left>[^\<]+<a href="([^\"]+)">([^\<]+)</a>' ,
                                  response_data, re.DOTALL):
@@ -212,7 +222,9 @@ class xfilesharing(cloudservice.cloudservice):
 
 
             # folder-entry
-            for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
+#            for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
+            folderID = 0
+            for r in re.finditer('<option value="(\d\d+)">([^\<]+)</option>' ,
                                  response_data, re.DOTALL):
                 folderID,folderName = r.groups()
 
@@ -221,16 +233,26 @@ class xfilesharing(cloudservice.cloudservice):
                 # folder
                 if int(folderID) != 0:
                     videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
-            # folder-entry
-            for r in re.finditer('<a href="\?op=my_files\&.*?fld_id=(\d\d+)".*?>([^\<]+)</a>' ,
+            if folderID == 0:
+                for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
                                  response_data, re.DOTALL):
-                folderID,folderName = r.groups()
+                    folderID,folderName = r.groups()
 
-                log('found folder %s %s' % (folderName, url))
+                    log('found folder %s %s' % (folderName, url))
 
-                # folder
-                if int(folderID) != 0:
-                    videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
+                    # folder
+                    if int(folderID) != 0:
+                        videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
+                       # folder-entry
+#            for r in re.finditer('<a href="\?op=my_files\&.*?fld_id=(\d\d+)".*?>([^\<]+)</a>' ,
+#                                 response_data, re.DOTALL):
+#                folderID,folderName = r.groups()
+
+#                log('found folder %s %s' % (folderName, url))
+
+#                # folder
+#                if int(folderID) != 0:
+#                    videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
 
 
 
@@ -298,6 +320,28 @@ class xfilesharing(cloudservice.cloudservice):
 
              }
 
+        for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
+             op,id,rand,referer,submit = r.groups()
+             values = {
+                  'op' : op,
+                  'id' : id,
+                  'rand' : rand,
+                  'referer' : referer,
+                  'method_free' : submit,
+                  'download_direct' : 1
+
+             }
+
+        for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
+             op,id,referer,submit = r.groups()
+             values = {
+                  'op' : op,
+                  'id' : id,
+                  'referer' : referer,
+                  'method_free' : submit,
+                  'download_direct' : 1
+
+             }
 
         req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
 
@@ -335,8 +379,21 @@ class xfilesharing(cloudservice.cloudservice):
              }
 
         streamURL=''
+
+
+        # for thefile
+        for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
+                deliminator,fileID = r.groups()
+                streamURL = 'http://d.thefile.me/d/'+fileID+'/video.mp4'
+
+        # for sharerepo
+        for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):
+                deliminator,fileID = r.groups()
+                streamURL = 'http://37.48.80.43/d/'+fileID+'/video.mp4?start=0'
+
+
         timeout = 0
-        if op != "":
+        if op != "" and streamURL == '':
             for r in re.finditer('Wait<strong><span id="(.*?)">(\d+)</span> seconds</strong>' ,response_data, re.DOTALL):
                 id,timeout = r.groups()
 
@@ -376,11 +433,7 @@ class xfilesharing(cloudservice.cloudservice):
                 streamURL,downloadlink = r.groups()
 
 
-        if self.domain == 'thefile.me':
-            for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
-                deliminator,fileID = r.groups()
-            streamURL = 'http://d.thefile.me/d/'+fileID+'/video.mp4'
-        elif streamURL == '':
+        if streamURL == '':
             streamURL = 0
             # fetch video title, download URL and docid for stream link
             for r in re.finditer('(file)\: \"([^\"]+)"\,' ,response_data, re.DOTALL):
