@@ -134,8 +134,8 @@ class xfilesharing(cloudservice.cloudservice):
     # return the appropriate "headers" for FireDrive requests that include 1) user agent, 2) authorization cookie
     #   returns: URL-encoded header string
     ##
-    def getHeadersEncoded(self):
-        return urllib.urlencode(self.getHeadersList())
+    def getHeadersEncoded(self, referer=''):
+        return urllib.urlencode(self.getHeadersList(referer))
 
     ##
     # retrieve a list of videos, using playback type stream
@@ -338,6 +338,18 @@ class xfilesharing(cloudservice.cloudservice):
                   'download_direct' : 1
 
              }
+        for r in re.finditer('<input type="hidden" name="ipcount_val"  id="ipcount_val" value="([^\"]+)">.*?<input type="hidden" name="op" value="([^\"]+)">.*? <input type="hidden" name="usr_login" value="([^\"]*)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="fname" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">' ,response_data, re.DOTALL):
+             ipcount,op,usr_login,id,fname,referer = r.groups()
+             values = {
+                  'ipcount_val' : ipcount,
+                  'op' : op,
+                  'usr_login' : usr_login,
+                  'id' : id,
+                  'fname' : fname,
+                  'referer' : referer,
+                  'method_free' : 'Slow access'
+             }
+
         for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="plugins_are_not_allowed" value="([^\"]+)"/>.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
              op,id,rand,referer,plugins,submit = r.groups()
              values = {
@@ -478,6 +490,15 @@ class xfilesharing(cloudservice.cloudservice):
             # fetch video title, download URL and docid for stream link
             for r in re.finditer('"(file)" : "([^\"]+)"\,' ,response_data, re.DOTALL):
                 streamType,streamURL = r.groups()
+
+        # uploadc.com
+        if streamURL == '':
+            # fetch video title, download URL and docid for stream link
+            for r in re.finditer('\'(file)\',\'([^\']+)\'\)\;' ,response_data, re.DOTALL):
+                streamType,streamURL = r.groups()
+                streamURL = streamURL + '|' + self.getHeadersEncoded(url)
+
+
 
         return streamURL
 
