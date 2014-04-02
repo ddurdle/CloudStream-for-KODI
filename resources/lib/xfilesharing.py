@@ -199,8 +199,30 @@ class xfilesharing(cloudservice.cloudservice):
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
 
+            # video-entry - uptobox
+            for r in re.finditer('<td style="[^\"]+"><a href="([^\"]+)".*?>([^\<]+)</a></td>' ,
+                                 response_data, re.DOTALL):
+                url,fileName = r.groups()
+
+
+                log('found video %s %s' % (fileName, url))
+
+                # streaming
+                videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
+
+
             # folder-entry
             for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
+                                 response_data, re.DOTALL):
+                folderID,folderName = r.groups()
+
+                log('found folder %s %s' % (folderName, url))
+
+                # folder
+                if int(folderID) != 0:
+                    videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
+            # folder-entry
+            for r in re.finditer('<a href="\?op=my_files\&.*?fld_id=(\d\d+)".*?>([^\<]+)</a>' ,
                                  response_data, re.DOTALL):
                 folderID,folderName = r.groups()
 
@@ -278,7 +300,6 @@ class xfilesharing(cloudservice.cloudservice):
 
 
         req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
-        #req = urllib2.Request(url, 'op=download1&usr_login=&id=lo9l3adb0c6c&fname=bates.motel.s02e05.hdtv.x264-killers.mp4&referer=&hash=487600-108-175-1396380862-817c0e0c32cc12f481bfb44df3399791&imhuman=Proceed+to+video', self.getHeadersList())
 
 
         # if action fails, validate login
@@ -300,11 +321,66 @@ class xfilesharing(cloudservice.cloudservice):
         response_data = response.read()
         response.close()
 
+        op=''
+        for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
+             op,id,rand,referer,submit = r.groups()
+             values = {
+                  'op' : op,
+                  'id' : id,
+                  'rand' : rand,
+                  'referer' : referer,
+                  'method_free' : submit,
+                  'download_direct' : 1
+
+             }
+
+        streamURL=''
+        timeout = 0
+        if op != "":
+            for r in re.finditer('Wait<strong><span id="(.*?)">(\d+)</span> seconds</strong>' ,response_data, re.DOTALL):
+                id,timeout = r.groups()
+
+            for r in re.finditer('<p class="(err)"><center><b>(.*?)</b>' ,response_data, re.DOTALL):
+                id,error = r.groups()
+                xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), error)
+                return
+
+
+
+            req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
+
+            xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037)+ str(timeout))
+
+            xbmc.sleep((int(timeout)+1)*1000)
+
+            # if action fails, validate login
+            try:
+                response = urllib2.urlopen(req)
+            except urllib2.URLError, e:
+                if e.code == 403 or e.code == 401:
+                    self.login()
+                    req = urllib2.Request(url,  urllib.urlencode(values), self.getHeadersList())
+                    try:
+                        response = urllib2.urlopen(req)
+                    except urllib2.URLError, e:
+                        log(str(e), True)
+                        return
+                else:
+                    log(str(e), True)
+                    return
+
+            response_data = response.read()
+            response.close()
+
+            for r in re.finditer('<a href="([^\"]+)">(Click here to start your download)</a>' ,response_data, re.DOTALL):
+                streamURL,downloadlink = r.groups()
+
+
         if self.domain == 'thefile.me':
             for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
             streamURL = 'http://d.thefile.me/d/'+fileID+'/video.mp4'
-        else:
+        elif streamURL == '':
             streamURL = 0
             # fetch video title, download URL and docid for stream link
             for r in re.finditer('(file)\: \"([^\"]+)"\,' ,response_data, re.DOTALL):

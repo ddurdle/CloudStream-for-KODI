@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <string id="30000">firedrive</string>
+    <string id="30000">CloudStream</string>
     <string id="30001">Username</string>
     <string id="30002">Password</string>
     <string id="30003">Domain</string>
@@ -30,6 +30,9 @@
     <string id="30034">Login Details for Account #5</string>
     <string id="30035">Login Details for Account #6</string>
     <string id="30027">bestreams.net</string>
+    <string id="30028">uptobox.com</string>
+    <string id="30036">The URL provided is not supported.</string>
+    <string id="30037">Timeout encountered.  Required to wait seconds = </string>
 
 </strings>
 

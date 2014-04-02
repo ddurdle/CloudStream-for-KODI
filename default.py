@@ -101,6 +101,21 @@ def numberOfAccounts(accountType):
         count = count + 1
     return actualCount
 
+def getInstanceName(accountType,domain):
+
+    count = 1
+    max_count = int(ADDON.getSetting(accountType+'_numaccounts'))
+    instanceName = ''
+    while True:
+        try:
+            if ADDON.getSetting(accountType+str(count)+'_username') != '' and (domain == ADDON.getSetting(accountType+str(count)+'_domain') or domain == ADDON.getSetting(accountType+str(count)+'_domain_custom')):
+                return accountType+str(count)
+        except:
+            break
+        if count == max_count:
+            break
+        count = count + 1
+    return ''
 
 
 #global variables
@@ -262,14 +277,17 @@ elif mode == 'streamurl':
     except:
       instanceName = ''
 
-    if instanceName == '':
-        for r in re.finditer('([^\:]+)\://.*?([^\.]+\.[^\/]+)/' ,
+    for r in re.finditer('([^\:]+)\://.*?([^\.]+\.[^\/]+)/' ,
                                  url, re.DOTALL):
-            protocol,domain = r.groups()
+        protocol,domain = r.groups()
 
-        if domain != '':
-            cloudservice = xfilesharing.xfilesharing('',domain,'', '', '', user_agent)
-    else:
+    if instanceName == '':
+        instanceName = getInstanceName('xfilesharing', domain)
+
+    if instanceName == '' and domain != '':
+        instanceName = getInstanceName('xfilesharing', domain)
+        cloudservice = xfilesharing.xfilesharing('',domain,'', '', '', user_agent)
+    elif instanceName != '':
         try:
             domain = ADDON.getSetting(instanceName+'_domain')
             custom_domain = ADDON.getSetting(instanceName+'_custom_domain')
@@ -280,6 +298,10 @@ elif mode == 'streamurl':
             cloudservice = xfilesharing.xfilesharing(instanceName,domain,username, password, auth_token, user_agent)
         except :
             pass
+    else:
+        xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30036))
+        xbmcplugin.endOfDirectory(plugin_handle)
+
 
     # immediately play resulting (is a video)
     videoURL = cloudservice.getPublicLink(url)

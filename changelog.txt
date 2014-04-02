@@ -1,3 +1,4 @@
+- add support for uptobox.com (my account videos & public URL)
 Version 0.0.2
 - public beta
 - add support for daclips.in (my account videos & public URL)
