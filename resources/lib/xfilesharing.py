@@ -28,7 +28,7 @@ import cookielib
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 
 # global variables
-PLUGIN_NAME = 'plugin.video.gdrive'
+PLUGIN_NAME = 'plugin.video.cloudstream'
 PLUGIN_URL = 'plugin://'+PLUGIN_NAME+'/'
 ADDON = xbmcaddon.Addon(id=PLUGIN_NAME)
 
@@ -406,7 +406,7 @@ class xfilesharing(cloudservice.cloudservice):
 
             req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
 
-            xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037)+ str(timeout))
+            xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(timeout))
 
             xbmc.sleep((int(timeout)+1)*1000)
 
