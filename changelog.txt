@@ -1,16 +1,19 @@
-- add support for filenuke.com (my account videos & public URL)
+- add support for filenuke.com (login & public URL)
+- add support for sharesix.com (login & public URL)
+- add support for mightyupload.com (login & public URL)
+- add support for vidhog.com  (login & public URL)
 Version 0.0.3
 - language file fix
 - add support for thevideo.me (public URL)
-- add support for sharerepo.com (my account videos & public URL)
-- add support for uptobox.com (my account videos & public URL)
+- add support for sharerepo.com (login & public URL)
+- add support for uptobox.com (login & public URL)
 Version 0.0.2
 - public beta
-- add support for daclips.in (my account videos & public URL)
-- add support for gorillavid.in (my account videos & public URL)
-- add support for movpod.in (my account videos & public URL)
-- add support for thefile.me (my account videos & public URL)
-- add support for bestreams.net (my account videos & public URL)
+- add support for daclips.in (login & public URL)
+- add support for gorillavid.in (login & public URL)
+- add support for movpod.in (login & public URL)
+- add support for thefile.me (login & public URL)
+- add support for bestreams.net (login & public URL)
 - support for multiple accounts
 Version 0.0.1
 - Initial version

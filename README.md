@@ -5,13 +5,18 @@ XBMC video plugin for streaming content from various cloud-streaming services
 
 Supports the following video streaming domains
 XFileSharing Pro
-- daclips.in (my account videos & public URL)
-- gorillavid.in (my account videos & public URL)
-- movpod.in (my account videos & public URL)
-- thefile.me (my account videos & public URL)
-- bestreams.net (my account videos & public URL)
-- uptobox.com (my account videos & public URL)
-- sharerepo.com (my account videos & public URL)
+- daclips.in (login & public URL)
+- gorillavid.in (login & public URL)
+- movpod.in (login & public URL)
+- thefile.me (login & public URL)
+- bestreams.net (login & public URL)
+- uptobox.com (login & public URL)
+- sharerepo.com (login & public URL)
+- thevideo.me (public URL)
+- filenuke.com (login & public URL)
+- sharesix.com (login & public URL)
+- mightyupload.com (login & public URL)
+- vidhog.com  (login & public URL)
 
 Supports [Tested on]:
 All XBMC 12, 12.2, 13 including Linux, Windows, OS X, Android, Pivos, iOS (including ATV2), Raspberry Pi

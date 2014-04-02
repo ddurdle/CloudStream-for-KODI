@@ -314,17 +314,7 @@ class xfilesharing(cloudservice.cloudservice):
 
              }
 
-        for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
-             op,id,rand,referer,submit = r.groups()
-             values = {
-                  'op' : op,
-                  'id' : id,
-                  'rand' : rand,
-                  'referer' : referer,
-                  'method_free' : submit,
-                  'download_direct' : 1
 
-             }
 
         for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
              op,id,referer,submit = r.groups()
@@ -337,7 +327,35 @@ class xfilesharing(cloudservice.cloudservice):
 
              }
 
+        for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
+             op,id,rand,referer,submit = r.groups()
+             values = {
+                  'op' : op,
+                  'id' : id,
+                  'rand' : rand,
+                  'referer' : referer,
+                  'method_free' : submit,
+                  'download_direct' : 1
+
+             }
+        for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="plugins_are_not_allowed" value="([^\"]+)"/>.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
+             op,id,rand,referer,plugins,submit = r.groups()
+             values = {
+                  'op' : op,
+                  'id' : id,
+                  'rand' : rand,
+                  'referer' : referer,
+                  'plugins_are_not_allowed' : plugins,
+                  'method_free' : submit,
+                  'download_direct' : 1
+
+             }
+
         req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
+
+        if self.domain == 'vidhog.com':
+            xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(15))
+            xbmc.sleep((int(15)+1)*1000)
 
 
         # if action fails, validate login
@@ -390,6 +408,11 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
                 streamURL = 'http://37.252.3.244/d/'+fileID+'/video.flv?start=0'
+        elif self.domain == 'sharesix.com':
+            for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
+                deliminator,fileID = r.groups()
+                streamURL = 'http://37.252.3.252/d/'+fileID+'/video.flv?start=0'
+
 
 
         timeout = 0
@@ -434,11 +457,21 @@ class xfilesharing(cloudservice.cloudservice):
 
 
         if streamURL == '':
-            streamURL = 0
             # fetch video title, download URL and docid for stream link
             for r in re.finditer('(file)\: \"([^\"]+)"\,' ,response_data, re.DOTALL):
                 streamType,streamURL = r.groups()
 
+        # mightyupload.com
+        if streamURL == '':
+            # fetch video title, download URL and docid for stream link
+            for r in re.finditer('var (file_link) = \'([^\']+)\'' ,response_data, re.DOTALL):
+                streamType,streamURL = r.groups()
+
+        # vidhog.com
+        if streamURL == '':
+            # fetch video title, download URL and docid for stream link
+            for r in re.finditer('(product_download_url)=([^\']+)\'' ,response_data, re.DOTALL):
+                streamType,streamURL = r.groups()
 
         return streamURL
 
