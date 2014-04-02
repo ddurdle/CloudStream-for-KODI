@@ -32,9 +32,14 @@
     <string id="30027">bestreams.net</string>
     <string id="30028">uptobox.com</string>
     <string id="30029">sharerepo.com</string>
-    <string id="30040">thevideo.me</string>
+    <string id="30042">thevideo.me</string>
     <string id="30036">The URL provided is not supported.</string>
     <string id="30037">Timeout encountered.  Required to wait seconds = </string>
+    <string id="30038">Login Details for Account #7</string>
+    <string id="30039">Login Details for Account #8</string>
+    <string id="30040">Login Details for Account #9</string>
+    <string id="30041">Login Details for Account #10</string>
+    <string id="30043">filenuke.com</string>
 
 </strings>
 

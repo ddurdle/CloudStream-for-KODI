@@ -1,3 +1,4 @@
+- add support for filenuke.com (my account videos & public URL)
 Version 0.0.3
 - language file fix
 - add support for thevideo.me (public URL)

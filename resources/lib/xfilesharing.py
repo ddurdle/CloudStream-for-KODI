@@ -221,18 +221,24 @@ class xfilesharing(cloudservice.cloudservice):
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
 
 
-            # folder-entry
-#            for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
-            folderID = 0
-            for r in re.finditer('<option value="(\d\d+)">([^\<]+)</option>' ,
+            #flatten folders (no clean way of handling subfolders, so just make the root list all folders & subfolders
+            #therefore, skip listing folders if we're not in root
+            if folderID == 0:
+                # folder-entry
+                #            for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
+                folderID = 0
+                for r in re.finditer('<option value="(\d\d+)">([^\<]+)</option>' ,
                                  response_data, re.DOTALL):
-                folderID,folderName = r.groups()
+                    folderID,folderName = r.groups()
 
-                log('found folder %s %s' % (folderName, url))
+                    #remove &nbsp; from folderName
+                    folderName = re.sub('\&nbsp\;', '', folderName)
 
-                # folder
-                if int(folderID) != 0:
-                    videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
+                    log('found folder %s %s' % (folderName, url))
+
+                    # folder
+                    if int(folderID) != 0:
+                        videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
             if folderID == 0:
                 for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
                                  response_data, re.DOTALL):
@@ -243,18 +249,6 @@ class xfilesharing(cloudservice.cloudservice):
                     # folder
                     if int(folderID) != 0:
                         videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
-                       # folder-entry
-#            for r in re.finditer('<a href="\?op=my_files\&.*?fld_id=(\d\d+)".*?>([^\<]+)</a>' ,
-#                                 response_data, re.DOTALL):
-#                folderID,folderName = r.groups()
-
-#                log('found folder %s %s' % (folderName, url))
-
-#                # folder
-#                if int(folderID) != 0:
-#                    videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
-
-
 
         return videos
 
@@ -382,14 +376,20 @@ class xfilesharing(cloudservice.cloudservice):
 
 
         # for thefile
-        for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
+        if self.domain == 'thefile.me':
+            for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
                 streamURL = 'http://d.thefile.me/d/'+fileID+'/video.mp4'
 
-        # for sharerepo
-        for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):
+        elif self.domain == 'sharerepo.com':
+            for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
                 streamURL = 'http://37.48.80.43/d/'+fileID+'/video.mp4?start=0'
+
+        elif self.domain == 'filenuke.com':
+            for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
+                deliminator,fileID = r.groups()
+                streamURL = 'http://37.252.3.244/d/'+fileID+'/video.flv?start=0'
 
 
         timeout = 0
