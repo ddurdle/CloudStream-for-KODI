@@ -1,3 +1,4 @@
+- add support for thevideo.me (public URL)
 - add support for sharerepo.com (my account videos & public URL)
 - add support for uptobox.com (my account videos & public URL)
 Version 0.0.2
