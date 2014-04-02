@@ -17,6 +17,7 @@ XFileSharing Pro
 - sharesix.com (login & public URL)
 - mightyupload.com (login & public URL)
 - vidhog.com  (login & public URL)
+- vidspot.net (login & public URL)
 
 Supports [Tested on]:
 All XBMC 12, 12.2, 13 including Linux, Windows, OS X, Android, Pivos, iOS (including ATV2), Raspberry Pi

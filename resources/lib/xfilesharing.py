@@ -473,5 +473,11 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('(product_download_url)=([^\']+)\'' ,response_data, re.DOTALL):
                 streamType,streamURL = r.groups()
 
+        # vidspot.net
+        if streamURL == '':
+            # fetch video title, download URL and docid for stream link
+            for r in re.finditer('"(file)" : "([^\"]+)"\,' ,response_data, re.DOTALL):
+                streamType,streamURL = r.groups()
+
         return streamURL
 
