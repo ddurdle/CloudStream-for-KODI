@@ -370,24 +370,26 @@ class xfilesharing(cloudservice.cloudservice):
             xbmc.sleep((int(15)+1)*1000)
 
 
-        # if action fails, validate login
-        try:
-            response = urllib2.urlopen(req)
-        except urllib2.URLError, e:
-            if e.code == 403 or e.code == 401:
-              self.login()
-              req = urllib2.Request(url,  urllib.urlencode(values), self.getHeadersList())
-              try:
-                response = urllib2.urlopen(req)
-              except urllib2.URLError, e:
-                log(str(e), True)
-                return
-            else:
-              log(str(e), True)
-              return
+        if self.domain != 'hcbit.com':
 
-        response_data = response.read()
-        response.close()
+                # if action fails, validate login
+            try:
+                response = urllib2.urlopen(req)
+            except urllib2.URLError, e:
+                if e.code == 403 or e.code == 401:
+                    self.login()
+                    req = urllib2.Request(url,  urllib.urlencode(values), self.getHeadersList())
+                    try:
+                        response = urllib2.urlopen(req)
+                    except urllib2.URLError, e:
+                        log(str(e), True)
+                        return
+                else:
+                    log(str(e), True)
+                    return
+
+            response_data = response.read()
+            response.close()
 
         op=''
         for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
@@ -441,9 +443,10 @@ class xfilesharing(cloudservice.cloudservice):
 
             req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
 
-            xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(timeout))
+            if timeout > 0:
+                xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(timeout))
 
-            xbmc.sleep((int(timeout)+1)*1000)
+                xbmc.sleep((int(timeout)+1)*1000)
 
             # if action fails, validate login
             try:

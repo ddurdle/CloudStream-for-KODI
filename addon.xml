@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.cloudstream" version="0.0.4" name="CloudStream" provider-name="ddurdle">
+<addon id="plugin.video.cloudstream" version="0.0.5" name="CloudStream" provider-name="ddurdle">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
@@ -11,7 +11,7 @@
         <description>Stream music and video content from various cloud-streaming services
         			supports: daclips.in, gorillavid.in, movpod.in, thefile.me, bestreams.net, uptobox.com,
         			sharerep.com, thevideo.me, filenuke.com, sharesix.com, mightyupload.com, vidhog.com,
-        			vidspot.net, www.uploadc.com</description>
+        			vidspot.net, www.uploadc.com, hcbit.com</description>
         <platform>all</platform>
     </extension>
 </addon>

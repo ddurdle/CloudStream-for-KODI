@@ -1,3 +1,5 @@
+Version 0.0.5
+- Support for hcbit.com #2
 - add support for vidspot.net (login & public URL)
 - add support for www.uploadc.com (login & public URL)
 Version 0.0.4
