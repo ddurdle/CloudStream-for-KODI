@@ -48,7 +48,6 @@ def parse_query(query):
 def addVideo(url, infolabels, label, img='', fanart='', total_items=0,
                    cm=[], cm_replace=False):
     infolabels = decode_dict(infolabels)
-    log('adding video: %s - %s' % (infolabels['title'], url))
     listitem = xbmcgui.ListItem(label, iconImage=img,
                                 thumbnailImage=img)
     listitem.setInfo('video', infolabels)
@@ -60,7 +59,7 @@ def addVideo(url, infolabels, label, img='', fanart='', total_items=0,
                                 isFolder=False, totalItems=total_items)
 
 def addDirectory(url, title, img='', fanart='', total_items=0):
-    log('adding dir: %s - %s' % (title, url))
+
     listitem = xbmcgui.ListItem(decode(title), iconImage=img, thumbnailImage=img)
     if not fanart:
         fanart = ADDON.getAddonInfo('path') + '/fanart.jpg'
@@ -159,7 +158,6 @@ mode = mode.lower()
 accounts = []
 #dump a list of videos available to play
 if mode == 'main' or mode == 'folder':
-    log(mode)
 
     folderID=0
     if (mode == 'folder'):
@@ -245,7 +243,6 @@ if mode == 'main' or mode == 'folder':
 
         if singlePlayback != '':
             item = xbmcgui.ListItem(path=videos[singlePlayback]['url'])
-            log('play url: ' + singlePlayback)
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
         # update the authorization token in the configuration file if we had to login for a new one during this execution run
@@ -264,7 +261,6 @@ elif mode == 'streamvideo':
     # immediately play resulting (is a video)
     videoURL = cloudservice.getVideoLink(filename)
     item = xbmcgui.ListItem(path=videoURL)
-    log('play url: ' + videoURL)
     xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
 elif mode == 'streamurl':
@@ -306,7 +302,6 @@ elif mode == 'streamurl':
     # immediately play resulting (is a video)
     videoURL = cloudservice.getPublicLink(url)
     item = xbmcgui.ListItem(path=videoURL)
-    log('play url: ' + videoURL)
     xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
     # update the authorization token in the configuration file if we had to login for a new one during this execution run

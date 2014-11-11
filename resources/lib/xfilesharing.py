@@ -78,7 +78,6 @@ class xfilesharing(cloudservice.cloudservice):
                   'password' : self.password
         }
 
-        log('logging in')
 
         # try login
         try:
@@ -153,7 +152,6 @@ class xfilesharing(cloudservice.cloudservice):
 
         videos = {}
         if True:
-            log('url = %s header = %s' % (url, self.getHeadersList()))
             req = urllib2.Request(url, None, self.getHeadersList())
 
             # if action fails, validate login
@@ -162,6 +160,7 @@ class xfilesharing(cloudservice.cloudservice):
             except urllib2.URLError, e:
               if e.code == 403 or e.code == 401:
                 self.login()
+
                 req = urllib2.Request(url, None, self.getHeadersList())
                 try:
                   response = urllib2.urlopen(req)
@@ -183,8 +182,6 @@ class xfilesharing(cloudservice.cloudservice):
                 fileID,url,fileName = r.groups()
 
 
-                log('found video %s %s' % (fileName, url))
-
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
 
@@ -192,8 +189,6 @@ class xfilesharing(cloudservice.cloudservice):
                                  response_data, re.DOTALL):
                 url,fileName = r.groups()
 
-
-                log('found video %s %s' % (fileName, url))
 
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
@@ -204,8 +199,6 @@ class xfilesharing(cloudservice.cloudservice):
                 url,fileName = r.groups()
 
 
-                log('found video %s %s' % (fileName, url))
-
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
 
@@ -214,8 +207,6 @@ class xfilesharing(cloudservice.cloudservice):
                                  response_data, re.DOTALL):
                 url,fileName = r.groups()
 
-
-                log('found video %s %s' % (fileName, url))
 
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
@@ -234,8 +225,6 @@ class xfilesharing(cloudservice.cloudservice):
                     #remove &nbsp; from folderName
                     folderName = re.sub('\&nbsp\;', '', folderName)
 
-                    log('found folder %s %s' % (folderName, url))
-
                     # folder
                     if int(folderID) != 0:
                         videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
@@ -243,8 +232,6 @@ class xfilesharing(cloudservice.cloudservice):
                 for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
                                  response_data, re.DOTALL):
                     folderID,folderName = r.groups()
-
-                    log('found folder %s %s' % (folderName, url))
 
                     # folder
                     if int(folderID) != 0:
@@ -272,6 +259,7 @@ class xfilesharing(cloudservice.cloudservice):
         except urllib2.URLError, e:
             if e.code == 403 or e.code == 401:
               self.login()
+
               req = urllib2.Request(url, None, self.getHeadersList())
               try:
                   response = opener.open(req)
