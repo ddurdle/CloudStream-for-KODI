@@ -261,19 +261,20 @@ class xfilesharing(cloudservice.cloudservice):
     def getPublicLink(self,url,cacheType=0):
 
 
-        log('url = %s header = %s' % (url, self.getHeadersList()))
-        req = urllib2.Request(url, None, self.getHeadersList())
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar), MyHTTPErrorProcessor)
+        opener.addheaders = [ ('User-Agent' , self.user_agent), ('Referer', url), ('Cookie', 'lang=english; login='+self.user+'; xfsts='+self.auth+'; xfss='+self.auth+';')]
+        req = urllib2.Request(url)
 
 
         # if action fails, validate login
         try:
-            response = urllib2.urlopen(req)
+            response = opener.open(req)
         except urllib2.URLError, e:
             if e.code == 403 or e.code == 401:
               self.login()
               req = urllib2.Request(url, None, self.getHeadersList())
               try:
-                response = urllib2.urlopen(req)
+                  response = opener.open(req)
               except urllib2.URLError, e:
                 log(str(e), True)
                 return
@@ -363,24 +364,26 @@ class xfilesharing(cloudservice.cloudservice):
 
              }
 
-        req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
+#        req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
+        req = urllib2.Request(url)
 
         if self.domain == 'vidhog.com':
             xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(15))
             xbmc.sleep((int(15)+1)*1000)
 
 
-        if self.domain != 'hcbit.com':
+        if self.domain == 'hcbit.com':
 
-                # if action fails, validate login
             try:
-                response = urllib2.urlopen(req)
+#                response = urllib2.urlopen(req)
+                response = opener.open(req, urllib.urlencode(values))
+
             except urllib2.URLError, e:
                 if e.code == 403 or e.code == 401:
                     self.login()
-                    req = urllib2.Request(url,  urllib.urlencode(values), self.getHeadersList())
+
                     try:
-                        response = urllib2.urlopen(req)
+                        response = opener.open(req, urllib.urlencode(values))
                     except urllib2.URLError, e:
                         log(str(e), True)
                         return
@@ -388,8 +391,29 @@ class xfilesharing(cloudservice.cloudservice):
                     log(str(e), True)
                     return
 
-            response_data = response.read()
-            response.close()
+            return response.info().getheader('Location') + '|' + self.getHeadersEncoded(url)
+
+
+        # if action fails, validate login
+        try:
+#              response = urllib2.urlopen(req)
+            response = opener.open(req, urllib.urlencode(values))
+
+        except urllib2.URLError, e:
+            if e.code == 403 or e.code == 401:
+                    self.login()
+
+                    try:
+                        response = opener.open(req, urllib.urlencode(values))
+                    except urllib2.URLError, e:
+                        log(str(e), True)
+                        return
+            else:
+                    log(str(e), True)
+                    return
+
+        response_data = response.read()
+        response.close()
 
         op=''
         for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
@@ -441,7 +465,8 @@ class xfilesharing(cloudservice.cloudservice):
 
 
 
-            req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
+
+            req = urllib2.Request(url)
 
             if timeout > 0:
                 xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(timeout))
@@ -450,13 +475,14 @@ class xfilesharing(cloudservice.cloudservice):
 
             # if action fails, validate login
             try:
-                response = urllib2.urlopen(req)
+                response = opener.open(req, urllib.urlencode(values))
+
             except urllib2.URLError, e:
                 if e.code == 403 or e.code == 401:
                     self.login()
-                    req = urllib2.Request(url,  urllib.urlencode(values), self.getHeadersList())
+
                     try:
-                        response = urllib2.urlopen(req)
+                        response = opener.open(req, urllib.urlencode(values))
                     except urllib2.URLError, e:
                         log(str(e), True)
                         return
@@ -504,4 +530,20 @@ class xfilesharing(cloudservice.cloudservice):
 
 
         return streamURL
+
+class MyHTTPErrorProcessor(urllib2.HTTPErrorProcessor):
+
+    def http_response(self, request, response):
+        code, msg, hdrs = response.code, response.msg, response.info()
+
+        # only add this line to stop 302 redirection.
+        if code == 302: return response
+
+        if not (200 <= code < 300):
+            response = self.parent.error(
+                'http', request, response, code, msg, hdrs)
+        return response
+
+    https_response = http_response
+
 

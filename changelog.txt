@@ -1,3 +1,5 @@
+Version 0.0.6
+- playback fix for: Support for hcbit.com #2
 Version 0.0.5
 - Support for hcbit.com #2
 - add support for vidspot.net (login & public URL)
