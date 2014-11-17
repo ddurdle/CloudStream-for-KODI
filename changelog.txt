@@ -1,3 +1,7 @@
+Version 0.0.7
+- hcbit.com - bypass captcha prompts (for non-premium users?)
+- hcbit.com - fix authorization is expired issue
+- handle subfolders without flattening them (tested with hcbit.com)
 - remove extra log statements
 Version 0.0.6
 - playback fix for: Support for hcbit.com #2

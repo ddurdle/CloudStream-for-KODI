@@ -174,6 +174,21 @@ class xfilesharing(cloudservice.cloudservice):
             response_data = response.read()
             response.close()
 
+            for r in re.finditer('placeholder\=\"(Username)\" id\=i\"(nputLoginEmail)\" name\=\"login\"' ,
+                                 response_data, re.DOTALL):
+                loginUsername,loginUsernameName = r.groups()
+                self.login()
+
+                req = urllib2.Request(url, None, self.getHeadersList())
+                try:
+                  response = urllib2.urlopen(req)
+                except urllib2.URLError, e:
+                  log(str(e), True)
+                  return
+
+                response_data = response.read()
+                response.close()
+
 
             # parsing page for videos
             # video-entry
@@ -214,27 +229,27 @@ class xfilesharing(cloudservice.cloudservice):
 
             #flatten folders (no clean way of handling subfolders, so just make the root list all folders & subfolders
             #therefore, skip listing folders if we're not in root
-            if folderID == 0:
+#            if folderID == 0:
                 # folder-entry
                 #            for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
-                folderID = 0
-                for r in re.finditer('<option value="(\d\d+)">([^\<]+)</option>' ,
-                                 response_data, re.DOTALL):
-                    folderID,folderName = r.groups()
+#                folderID = 0
+#                for r in re.finditer('<option value="(\d\d+)">([^\<]+)</option>' ,
+#                                 response_data, re.DOTALL):
+#                    folderID,folderName = r.groups()
 
                     #remove &nbsp; from folderName
-                    folderName = re.sub('\&nbsp\;', '', folderName)
+#                    folderName = re.sub('\&nbsp\;', '', folderName)
 
                     # folder
-                    if int(folderID) != 0:
-                        videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
-            if folderID == 0:
-                for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
+#                    if int(folderID) != 0:
+#                        videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
+#            if folderID == 0:
+            for r in re.finditer('<a href=".*?fld_id=([^\"]+)"><b>([^\<]+)</b></a>' ,
                                  response_data, re.DOTALL):
                     folderID,folderName = r.groups()
 
                     # folder
-                    if int(folderID) != 0:
+                    if int(folderID) != 0 and folderName != '&nbsp;. .&nbsp;':
                         videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
 
         return videos
@@ -272,6 +287,21 @@ class xfilesharing(cloudservice.cloudservice):
 
         response_data = response.read()
         response.close()
+
+        for r in re.finditer('name\=\"(code)\" class\=\"(captcha_code)' ,
+                                 response_data, re.DOTALL):
+                loginUsername,loginUsernameName = r.groups()
+                self.login()
+
+                req = urllib2.Request(url, None, self.getHeadersList())
+                try:
+                  response = urllib2.urlopen(req)
+                except urllib2.URLError, e:
+                  log(str(e), True)
+                  return
+
+                response_data = response.read()
+                response.close()
 
 
         confirmID = 0
@@ -378,8 +408,19 @@ class xfilesharing(cloudservice.cloudservice):
                 else:
                     log(str(e), True)
                     return
-
-            return response.info().getheader('Location') + '|' + self.getHeadersEncoded(url)
+            try:
+                if response.info().getheader('Location') != '':
+                    return response.info().getheader('Location') + '|' + self.getHeadersEncoded(url)
+            except:
+                for r in re.finditer('\'(file)\'\,\'([^\']+)\'' ,response_data, re.DOTALL):
+                    streamType,streamURL = r.groups()
+                    return streamURL  + '|' + self.getHeadersEncoded(url)
+                for r in re.finditer('\<td (nowrap)\>([^\<]+)\<\/td\>' ,response_data, re.DOTALL):
+                    deliminator,fileName = r.groups()
+                for r in re.finditer('(\|)([^\|]{42})\|' ,response_data, re.DOTALL):
+                    deliminator,fileID = r.groups()
+                    streamURL = 'http://cloud1.hcbit.com/cgi-bin/dl.cgi/'+fileID+'/'+fileName
+                    return streamURL  + '|' + self.getHeadersEncoded(url)
 
 
         # if action fails, validate login
