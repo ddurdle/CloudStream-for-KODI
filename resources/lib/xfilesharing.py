@@ -464,7 +464,7 @@ class xfilesharing(cloudservice.cloudservice):
         if self.domain == 'thefile.me':
             for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
-                streamURL = 'http://d.thefile.me/d/'+fileID+'/video.mp4'
+                streamURL = 'http://185.56.28.34/d/'+fileID+'/video.mp4'
 
         elif self.domain == 'sharerepo.com':
             for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):
