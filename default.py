@@ -268,14 +268,24 @@ elif mode == 'streamurl':
       url = plugin_queries['url']
     except:
       url = 0
+    url = re.sub('---', '&', url)
+    url = re.sub(' ', '+', url)
+
     try:
       instanceName = plugin_queries['instance']
     except:
       instanceName = ''
 
-    for r in re.finditer('([^\:]+)\://.*?([^\.]+\.[^\/]+)/' ,
+    try:
+      domain = plugin_queries['domain']
+    except:
+      domain = ''
+
+
+    if domain == '':
+        for r in re.finditer('([^\:]+)\://.*?([^\.]+\.[^\/]+)/' ,
                                  url, re.DOTALL):
-        protocol,domain = r.groups()
+            protocol,domain = r.groups()
 
     if instanceName == '':
         instanceName = getInstanceName('xfilesharing', domain)

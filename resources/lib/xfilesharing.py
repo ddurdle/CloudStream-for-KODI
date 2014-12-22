@@ -262,9 +262,19 @@ class xfilesharing(cloudservice.cloudservice):
     ##
     def getPublicLink(self,url,cacheType=0):
 
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar))
+        opener.addheaders = [ ('User-Agent' , self.user_agent)]
+        req = urllib2.Request(url)
+        try:
+            response = opener.open(req)
+        except urllib2.URLError, e:
+            pass
+        response.close()
+        url = response.url
 
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar), MyHTTPErrorProcessor)
         opener.addheaders = [ ('User-Agent' , self.user_agent), ('Referer', url), ('Cookie', 'lang=english; login='+self.user+'; xfsts='+self.auth+'; xfss='+self.auth+';')]
+
         req = urllib2.Request(url)
 
 
@@ -287,6 +297,8 @@ class xfilesharing(cloudservice.cloudservice):
 
         response_data = response.read()
         response.close()
+        url = response.url
+        req = urllib2.Request(url)
 
         for r in re.finditer('name\=\"(code)\" class\=\"(captcha_code)' ,
                                  response_data, re.DOTALL):
@@ -333,7 +345,22 @@ class xfilesharing(cloudservice.cloudservice):
 
              }
 
+        for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="usr_login" value="([^\"]*)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="fname" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="hash" value="([^\"]*)">.*?<input type="hidden" name="inhu" value="([^\"]*)">.*?<input type="submit" name="imhuman" value="([^\"]*)" id="btn_download">' ,response_data, re.DOTALL):
+             op,usr_login,id,fname,referer,hash,inhu,submit = r.groups()
+             values = {
 
+                  '_vhash' : 'i1102394cE',
+                  'gfk' : 'i22abd2449',
+                  'op' : op,
+                  'usr_login' : usr_login,
+                  'id' : id,
+                  'fname' : fname,
+                  'referer' : referer,
+                  'hash' : hash,
+                  'inhu' : inhu,
+                  'imhuman' : submit
+
+             }
 
         for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
              op,id,referer,submit = r.groups()
@@ -369,8 +396,63 @@ class xfilesharing(cloudservice.cloudservice):
                   'method_free' : 'Slow access'
              }
 
+        values = {}
+        variable = 'op'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'usr_login'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'id'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'fname'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'referer'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+
+        variable = 'hash'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'inhu'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'imhuman'
+        for r in re.finditer('<input type="(submit)" name="'+variable+'" value="([^\"]*)" id="btn_download">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'gfk'
+        for r in re.finditer('(name): \''+variable+'\', value: \'([^\']*)\'' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = '_vhash'
+        for r in re.finditer('(name): \''+variable+'\', value: \'([^\']*)\'' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+
+
         for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="plugins_are_not_allowed" value="([^\"]+)"/>.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
              op,id,rand,referer,plugins,submit = r.groups()
+
              values = {
                   'op' : op,
                   'id' : id,
@@ -381,6 +463,8 @@ class xfilesharing(cloudservice.cloudservice):
                   'download_direct' : 1
 
              }
+
+
 
 #        req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
         req = urllib2.Request(url)
@@ -459,14 +543,26 @@ class xfilesharing(cloudservice.cloudservice):
 
         streamURL=''
 
+        title = ''
+        for r in re.finditer('\<(title)\>([^\>]*)\<\/title\>' ,response_data, re.DOTALL):
+             titleID,title = r.groups()
+
 
         # for thefile
         if self.domain == 'thefile.me':
+
+            downloadAddress = ''
+            for r in re.finditer('\<(img) src\=\"http\:\/\/([^\/]+)\/[^\"]+\" style' ,response_data, re.DOTALL):
+             downloadTag,downloadAddress = r.groups()
+
             for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
-                streamURL = 'http://185.56.28.34/d/'+fileID+'/video.mp4'
+                streamURL = 'http://'+str(downloadAddress)+'/d/'+fileID+'/video.mp4'
 
         elif self.domain == 'sharerepo.com':
+            for r in re.finditer('(file)\: \'([^\"]+)\'\,' ,response_data, re.DOTALL):
+                streamType,streamURL = r.groups()
+
             for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
                 streamURL = 'http://37.48.80.43/d/'+fileID+'/video.mp4?start=0'
@@ -479,6 +575,17 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
                 streamURL = 'http://37.252.3.252/d/'+fileID+'/video.flv?start=0'
+        elif self.domain == 'thevideo.me':
+
+            downloadAddress = ''
+            for r in re.finditer('\<(img) src\=\"http\:\/\/([^\/]+)\/[^\"]+\" style' ,response_data, re.DOTALL):
+                downloadTag,downloadAddress = r.groups()
+#        return 'http://93.120.27.101:8777/pgjtbhuu6coammfvg5gfae6xogigs5cw6gsx3ey7yt6hmihwhpcixuiaqmza/v.mp4'
+
+            for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):
+                deliminator,fileID = r.groups()
+                streamURL = 'http://'+downloadAddress+'/'+fileID+'/v.mp4'
+
 
 
 
@@ -556,6 +663,7 @@ class xfilesharing(cloudservice.cloudservice):
                 streamType,streamURL = r.groups()
                 streamURL = streamURL + '|' + self.getHeadersEncoded(url)
 
+#        return 'http://93.120.27.101:8777/pgjtbhuu6coammfvg5gfae6xogigs5cw6gsx3ey7yt6hmihwhpcixuiaqmza/v.mp4'
 
 
         return streamURL
