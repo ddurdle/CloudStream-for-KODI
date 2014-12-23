@@ -316,6 +316,11 @@ class xfilesharing(cloudservice.cloudservice):
                 response.close()
 
 
+        if self.domain == 'vidzi.tv':
+            for r in re.finditer('(file)\: \"([^\"]+)\.mp4\"' ,response_data, re.DOTALL):
+                streamType,streamURL = r.groups()
+                return streamURL + '.mp4'
+
         confirmID = 0
         values = {}
         # fetch video title, download URL and docid for stream link
@@ -433,10 +438,32 @@ class xfilesharing(cloudservice.cloudservice):
              hidden,value = r.groups()
              values[variable] = value
 
+        variable = 'method_free'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'method_premium'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'rand'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+        variable = 'down_direct'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
+
+
         variable = 'imhuman'
         for r in re.finditer('<input type="(submit)" name="'+variable+'" value="([^\"]*)" id="btn_download">' ,response_data, re.DOTALL):
              hidden,value = r.groups()
              values[variable] = value
+
 
         variable = 'gfk'
         for r in re.finditer('(name): \''+variable+'\', value: \'([^\']*)\'' ,response_data, re.DOTALL):
@@ -448,7 +475,7 @@ class xfilesharing(cloudservice.cloudservice):
              hidden,value = r.groups()
              values[variable] = value
 
-
+#        values['referer'] = ''
 
         for r in re.finditer('<input type="hidden" name="op" value="([^\"]+)">.*?<input type="hidden" name="id" value="([^\"]+)">.*?<input type="hidden" name="rand" value="([^\"]*)">.*?<input type="hidden" name="referer" value="([^\"]*)">.*?<input type="hidden" name="plugins_are_not_allowed" value="([^\"]+)"/>.*?<input type="hidden" name="method_free" value="([^\"]*)">' ,response_data, re.DOTALL):
              op,id,rand,referer,plugins,submit = r.groups()
@@ -506,6 +533,24 @@ class xfilesharing(cloudservice.cloudservice):
                     streamURL = 'http://cloud1.hcbit.com/cgi-bin/dl.cgi/'+fileID+'/'+fileName
                     return streamURL  + '|' + self.getHeadersEncoded(url)
 
+        if self.domain == 'bestreams.net':
+
+            file_id = ''
+            aff = ''
+            variable = 'file_id'
+            for r in re.finditer('\''+variable+'\', (\')([^\']*)\'' ,response_data, re.DOTALL):
+                hidden,value = r.groups()
+                file_id = value
+
+            variable = 'aff'
+            for r in re.finditer('\''+variable+'\', (\')([^\']*)\'' ,response_data, re.DOTALL):
+                hidden,value = r.groups()
+                aff = value
+
+            xbmc.sleep((int(2)+1)*1000)
+            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar))
+            opener.addheaders = [ ('User-Agent' , self.user_agent), ('Referer', url), ('Cookie', 'lang=1; file_id='+file_id+'; aff='+aff+';')]
+
 
         # if action fails, validate login
         try:
@@ -560,7 +605,7 @@ class xfilesharing(cloudservice.cloudservice):
                 streamURL = 'http://'+str(downloadAddress)+'/d/'+fileID+'/video.mp4'
 
         elif self.domain == 'sharerepo.com':
-            for r in re.finditer('(file)\: \'([^\"]+)\'\,' ,response_data, re.DOTALL):
+            for r in re.finditer('(file)\: \'([^\']+)\'\,' ,response_data, re.DOTALL):
                 streamType,streamURL = r.groups()
 
             for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):

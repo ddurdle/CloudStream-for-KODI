@@ -29,7 +29,8 @@
     <string id="30033">Login Details for Account #4</string>
     <string id="30034">Login Details for Account #5</string>
     <string id="30035">Login Details for Account #6</string>
-    <string id="30027">bestreams.net</string>
+<!-->    <string id="30027">bestreams.net</string>-->
+    <string id="30027"></string>
     <string id="30028">uptobox.com</string>
     <string id="30029">sharerepo.com</string>
     <string id="30042">thevideo.me</string>
@@ -46,6 +47,7 @@
     <string id="30047">vidspot.net</string>
     <string id="30048">www.uploadc.com</string>
     <string id="30049">hcbit.com</string>
-
+    <string id="30050">vodlocker.com</string>
+    <string id="30051">vidzi.tv</string>
 </strings>
 

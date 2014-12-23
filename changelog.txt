@@ -1,6 +1,9 @@
+- add support for vidzi.tv [added 12/2014]
+- remove support for bestreams.net [removed 12/2014]
+- add support for vodlocker.com [added 12/2014]
 Version 0.1.0
 - support for primewire plugin (external call)
-- fix/update thevideo.me support
+- fix/update thevideo.me support [added 12/2014]
 Version 0.0.7
 - hcbit.com - bypass captcha prompts (for non-premium users?)
 - hcbit.com - fix authorization is expired issue

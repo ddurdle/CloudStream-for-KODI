@@ -9,9 +9,9 @@
     <extension point="xbmc.addon.metadata">
         <summary>A cloud player for various cloud-streaming services</summary>
         <description>Stream music and video content from various cloud-streaming services
-        			supports: daclips.in, gorillavid.in, movpod.in, thefile.me, bestreams.net, uptobox.com,
+        			supports: daclips.in, gorillavid.in, movpod.in, thefile.me, bestreams.net (no longer supported), uptobox.com,
         			sharerep.com, thevideo.me, filenuke.com, sharesix.com, mightyupload.com, vidhog.com,
-        			vidspot.net, www.uploadc.com, hcbit.com</description>
+        			vidspot.net, www.uploadc.com, hcbit.com, vidzi.tv</description>
         <platform>all</platform>
     </extension>
 </addon>
