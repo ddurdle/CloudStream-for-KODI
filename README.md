@@ -8,21 +8,22 @@ XFileSharing Pro
 - daclips.in (login & public URL)
 - gorillavid.in (login & public URL)
 - movpod.in (login & public URL)
-- thefile.me (login & public URL)
-- bestreams.net (login & public URL) [removed 12/2014 no longer supported]
+- thefile.me (login & public URL) [updated 12/2014]
+- bestreams.net (login & public URL) [removed 12/2014 - no longer supported]
 - uptobox.com (login & public URL)
 - sharerepo.com (login & public URL)
-- thevideo.me (public URL)
+- thevideo.me (public URL) [updated 12/2014]
 - filenuke.com (login & public URL)
 - sharesix.com (login & public URL)
 - mightyupload.com (login & public URL)
 - vidhog.com  (login & public URL)
 - vidspot.net (login & public URL)
 - vodlocker.com [added 12/2014]
+- hcbit.com [added 09/2014]
 
 
 Supports [Tested on]:
-All XBMC 12, 12.2, 13 including Linux, Windows, OS X, Android, Pivos, iOS (including ATV2), Raspberry Pi
+All XBMC 13/13.2 and KODI 14 including Linux, Windows, OS X, Android, Pivos, iOS (including ATV2), Raspberry Pi
 
 Thoroughly tested on XBMC for Linux v13 & Raspberry Pi Raspbmc v12
 

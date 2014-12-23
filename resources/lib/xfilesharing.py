@@ -272,7 +272,8 @@ class xfilesharing(cloudservice.cloudservice):
         response.close()
         url = response.url
 
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar), MyHTTPErrorProcessor)
+#        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar), MyHTTPErrorProcessor)
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar))
         opener.addheaders = [ ('User-Agent' , self.user_agent), ('Referer', url), ('Cookie', 'lang=english; login='+self.user+'; xfsts='+self.auth+'; xfss='+self.auth+';')]
 
         req = urllib2.Request(url)
@@ -464,7 +465,6 @@ class xfilesharing(cloudservice.cloudservice):
              hidden,value = r.groups()
              values[variable] = value
 
-
         variable = 'gfk'
         for r in re.finditer('(name): \''+variable+'\', value: \'([^\']*)\'' ,response_data, re.DOTALL):
              hidden,value = r.groups()
@@ -496,12 +496,15 @@ class xfilesharing(cloudservice.cloudservice):
 #        req = urllib2.Request(url, urllib.urlencode(values), self.getHeadersList(url))
         req = urllib2.Request(url)
 
-        if self.domain == 'vidhog.com':
+        if self.domain == 'thefile.me':
+            values['method_free'] = 'Free Download'
+        elif self.domain == 'sharesix.com':
+            values['method_free'] = 'Free'
+
+        elif self.domain == 'vidhog.com':
             xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(15))
             xbmc.sleep((int(15)+1)*1000)
-
-
-        if self.domain == 'hcbit.com':
+        elif self.domain == 'hcbit.com':
 
             try:
 #                response = urllib2.urlopen(req)
@@ -617,9 +620,14 @@ class xfilesharing(cloudservice.cloudservice):
                 deliminator,fileID = r.groups()
                 streamURL = 'http://37.252.3.244/d/'+fileID+'/video.flv?start=0'
         elif self.domain == 'sharesix.com':
+            for r in re.finditer('(lnk1) \= \'([^\']+)\'' ,response_data, re.DOTALL):
+                streamType,streamURL = r.groups()
+                streamURL = streamURL + '|User-Agent=Mozilla%2F5.0+%28Windows+NT+6.1%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F39.0.2171.95+Safari%2F537.36'
+
+
             for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
-                streamURL = 'http://37.252.3.252/d/'+fileID+'/video.flv?start=0'
+                streamURL = 'http://37.252.3.252/d/'+fileID+'/video.flv?start=0' + '|' + self.getHeadersEncoded(url)
         elif self.domain == 'thevideo.me':
 
             downloadAddress = ''
