@@ -1,7 +1,7 @@
-XBMC-CloudStream
-================
+CloudStream for KODI / XBMC
+===========================
 
-XBMC video plugin for streaming content from various cloud-streaming services
+CloudStream for KODI / XBMC is a video plugin for streaming content from various cloud-streaming services
 
 Supports the following video streaming domains
 XFileSharing Pro
@@ -20,6 +20,7 @@ XFileSharing Pro
 - vidspot.net (login & public URL)
 - vodlocker.com [added 12/2014]
 - hcbit.com [added 09/2014]
+- www.uploadc.com (login & public URL)
 
 
 Supports [Tested on]:
