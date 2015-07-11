@@ -191,7 +191,7 @@ if mode == 'main' or mode == 'folder':
             count = count + 1
 
     else:
-        cloudservice = ''
+        #cloudservice = ''
         # show index of accounts
         if instanceName == '' and numberOfAccounts == 1:
 
@@ -227,27 +227,42 @@ if mode == 'main' or mode == 'folder':
                     update_token_name = instanceName+'_auth_token'
                     cloudservice = xfilesharing.xfilesharing(instanceName, domain, username, password, auth_token, user_agent)
 
-        cacheType = ADDON.getSetting('playback_type')
+        docontinue = 0
+        try:
+            cloudservice
+            docontinue = 1
+        except NameError:
+            xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), 'Please setup a service in Addon-Settings->Accounts')
+            #log(addon.getLocalizedString(30050)+ 'gdrive-login', True)
+            xbmcplugin.endOfDirectory(plugin_handle)
 
-        singlePlayback=''
-        videos = cloudservice.getVideosList(folderID=folderID)
+        if docontinue:
+            cacheType = ADDON.getSetting('playback_type')
 
-        for title in sorted(videos.iterkeys()):
-            if videos[title]['mediaType'] == cloudservice.MEDIA_TYPE_VIDEO:
-                addVideo(videos[title]['url'],
+            singlePlayback=''
+            try:
+                videos = cloudservice.getVideosList(folderID=folderID)
+            except:
+                xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), 'Please setup a service in Addon-Settings->Accounts')
+                #log(addon.getLocalizedString(30050)+ 'gdrive-login', True)
+                xbmcplugin.endOfDirectory(plugin_handle)
+
+            for title in sorted(videos.iterkeys()):
+                if videos[title]['mediaType'] == cloudservice.MEDIA_TYPE_VIDEO:
+                    addVideo(videos[title]['url'],
                              { 'title' : title , 'plot' : title }, title)
-                if singlePlayback == '':
-                    singlePlayback = title
-            else:
-                addDirectory(videos[title]['url'],title)
+                    if singlePlayback == '':
+                        singlePlayback = title
+                else:
+                    addDirectory(videos[title]['url'],title)
 
-        if singlePlayback != '':
-            item = xbmcgui.ListItem(path=videos[singlePlayback]['url'])
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
+            if singlePlayback != '':
+                item = xbmcgui.ListItem(path=videos[singlePlayback]['url'])
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
-        # update the authorization token in the configuration file if we had to login for a new one during this execution run
-        if auth_token != cloudservice.auth and save_auth == 'true':
-            ADDON.setSetting(cloudservice.instanceName+'_auth_token', cloudservice.auth)
+            # update the authorization token in the configuration file if we had to login for a new one during this execution run
+            if auth_token != cloudservice.auth and save_auth == 'true':
+                ADDON.setSetting(cloudservice.instanceName+'_auth_token', cloudservice.auth)
 
 
 #force stream - play a video given its exact-title
