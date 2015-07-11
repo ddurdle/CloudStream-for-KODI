@@ -5,7 +5,7 @@ CloudStream for KODI / XBMC is a video plugin for streaming content from various
 
 Supports the following video streaming domains
 XFileSharing Pro
-- daclips.in (login & public URL)
+- daclips.in (login & public URL) [last checked 07/2015]
 - gorillavid.in (login & public URL)
 - movpod.in (login & public URL)
 - thefile.me (login & public URL) [updated 12/2014]
