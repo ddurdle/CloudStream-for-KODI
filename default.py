@@ -182,7 +182,7 @@ if mode == 'main' or mode == 'folder':
                 if username != '':
                     domain = ADDON.getSetting(instanceName+'_domain')
                     if domain == 'CUSTOM':
-                        domain = ADDON.getSetting(instanceName+'_custom_domain')
+                        domain = ADDON.getSetting(instanceName+'_domain_custom')
                     addDirectory('plugin://plugin.video.cloudstream?mode=main&instance='+instanceName,domain + '-'+username)
             except:
                 break
@@ -203,12 +203,15 @@ if mode == 'main' or mode == 'folder':
                         username = ADDON.getSetting(instanceName+'_username')
                         if username != '':
                             domain = ADDON.getSetting(instanceName+'_domain')
-                            custom_domain = ADDON.getSetting(instanceName+'_custom_domain')
+                            custom_domain = ADDON.getSetting(instanceName+'_domain_custom')
                             password  = ADDON.getSetting(instanceName+'_password')
                             save_auth  = ADDON.getSetting(instanceName+'_save_auth')
                             auth_token = ADDON.getSetting(instanceName+'_auth_token')
                             update_token_name = instanceName+'_auth_token'
-                            cloudservice = xfilesharing.xfilesharing(instanceName, domain, username, password, auth_token, user_agent)
+                            if domain == 'CUSTOM':
+                                cloudservice = xfilesharing.xfilesharing(instanceName, custom_domain, username, password, auth_token, user_agent)
+                            else:
+                                cloudservice = xfilesharing.xfilesharing(instanceName, 'http://' + domain + '/', username, password, auth_token, user_agent)
                     except :
                         break
                     if count == max_count:
@@ -220,12 +223,15 @@ if mode == 'main' or mode == 'folder':
 
                     username = ADDON.getSetting(instanceName+'_username')
                     domain = ADDON.getSetting(instanceName+'_domain')
-                    custom_domain = ADDON.getSetting(instanceName+'_custom_domain')
+                    custom_domain = ADDON.getSetting(instanceName+'_domain_custom')
                     password  = ADDON.getSetting(instanceName+'_password')
                     save_auth  = ADDON.getSetting(instanceName+'_save_auth')
                     auth_token = ADDON.getSetting(instanceName+'_auth_token')
                     update_token_name = instanceName+'_auth_token'
-                    cloudservice = xfilesharing.xfilesharing(instanceName, domain, username, password, auth_token, user_agent)
+                    if domain == 'CUSTOM':
+                                cloudservice = xfilesharing.xfilesharing(instanceName, custom_domain, username, password, auth_token, user_agent)
+                    else:
+                                cloudservice = xfilesharing.xfilesharing(instanceName, 'http://' + domain + '/', username, password, auth_token, user_agent)
 
         docontinue = 0
         try:
@@ -311,12 +317,15 @@ elif mode == 'streamurl':
     elif instanceName != '':
         try:
             domain = ADDON.getSetting(instanceName+'_domain')
-            custom_domain = ADDON.getSetting(instanceName+'_custom_domain')
+            custom_domain = ADDON.getSetting(instanceName+'_domain_custom')
             username = ADDON.getSetting(instanceName+'_username')
             password = ADDON.getSetting(instanceName+'_password')
             save_auth  = ADDON.getSetting(instanceName+'_save_auth')
             auth_token = ADDON.getSetting(instanceName+'_auth_token')
-            cloudservice = xfilesharing.xfilesharing(instanceName,domain,username, password, auth_token, user_agent)
+            if domain == 'CUSTOM':
+                cloudservice = xfilesharing.xfilesharing(instanceName,custom_domain,username, password, auth_token, user_agent)
+            else:
+                cloudservice = xfilesharing.xfilesharing(instanceName,'http://' + domain + '/',username, password, auth_token, user_agent)
         except :
             pass
     else:

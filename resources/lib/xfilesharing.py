@@ -68,13 +68,13 @@ class xfilesharing(cloudservice.cloudservice):
         # default User-Agent ('Python-urllib/2.6') will *not* work
         opener.addheaders = [('User-Agent', self.user_agent)]
 
-        url = 'http://'+self.domain+'/'
+        url = self.domain
 
         values = {
                   'op' : 'login',
                   'redirect' : '',
                   'login' : self.user,
-                  'redirect' : 'http://' + self.domain + '/',
+                  'redirect' : url,
                   'password' : self.password
         }
 
@@ -145,9 +145,9 @@ class xfilesharing(cloudservice.cloudservice):
 
         # retrieve all documents
         if folderID == 0:
-            url = 'http://'+self.domain+'/?op=my_files'
+            url = self.domain+'?op=my_files'
         else:
-            url = 'http://'+self.domain+'/?op=my_files&fld_id='+folderID
+            url = self.domain+'?op=my_files&fld_id='+folderID
 
 
         videos = {}
@@ -619,15 +619,11 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
                 deliminator,fileID = r.groups()
                 streamURL = 'http://37.252.3.244/d/'+fileID+'/video.flv?start=0'
-        elif self.domain == 'sharesix.com':
-            for r in re.finditer('(lnk1) \= \'([^\']+)\'' ,response_data, re.DOTALL):
+        elif self.domain == 'sharerepo.com':
+            for r in re.finditer('(file)\: \'([^\']+)\'\,' ,response_data, re.DOTALL):
                 streamType,streamURL = r.groups()
-                streamURL = streamURL + '|User-Agent=Mozilla%2F5.0+%28Windows+NT+6.1%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F39.0.2171.95+Safari%2F537.36'
 
 
-            for r in re.finditer('(\|)([^\|]{56})\|' ,response_data, re.DOTALL):
-                deliminator,fileID = r.groups()
-                streamURL = 'http://37.252.3.252/d/'+fileID+'/video.flv?start=0' + '|' + self.getHeadersEncoded(url)
         elif self.domain == 'thevideo.me':
 
             downloadAddress = ''
