@@ -6,18 +6,18 @@ CloudStream for KODI / XBMC is a video plugin for streaming content from various
 Supports the following video streaming domains
 XFileSharing Pro
 - daclips.in (login & public URL) [last checked 07/2015]
-- gorillavid.in (login & public URL)
-- movpod.in (login & public URL)
-- thefile.me (login & public URL) [updated 12/2014]
 - bestreams.net (login & public URL) [removed 12/2014 - no longer supported]
-- uptobox.com (login & public URL)
 - sharerepo.com (login & public URL)
-- thevideo.me (public URL) [updated 12/2014]
-- filenuke.com (login & public URL)
-- sharesix.com (login & public URL)
-- mightyupload.com (login & public URL)
-- vidhog.com  (login & public URL)
-- vidspot.net (login & public URL)
+- filenuke.com (login & public URL) []
+- gorillavid.in (login & public URL) []
+- mightyupload.com (login & public URL) []
+- movpod.in (login & public URL) []
+- sharesix.com (login & public URL) []
+- thefile.me (login & public URL) [] [updated 12/2014]
+- thevideo.me (public URL) [] [updated 12/2014]
+- uptobox.com (login & public URL) []
+- vidhog.com  (login & public URL) []
+- vidspot.net (login & public URL) [last checked 07/2015]
 - vodlocker.com [added 12/2014]
 - hcbit.com [added 09/2014]
 - www.uploadc.com (login & public URL)
@@ -25,9 +25,9 @@ XFileSharing Pro
 
 
 Supports [Tested on]:
-All XBMC 13/13.2 and KODI 14 including Linux, Windows, OS X, Android, Pivos, iOS (including ATV2), Raspberry Pi
-
-Thoroughly tested on XBMC for Linux v13 & Raspberry Pi Raspbmc v12
+- XBMC 13/13.2
+- KODI 14
+* including Linux, Windows, OS X, Android, Pivos, iOS (including ATV2), Raspberry Pi, OSMC
 
 
 Getting Started:
@@ -51,8 +51,4 @@ Modes:
 - handy for playback of publicly shared videos stored in SockShare
 - create .strm or .m3u files containing the following: plugin://plugin.video.cloudstream/?mode=streamURL&amp;url=http://domain.com/#####
 - if your video is composed of multiple clips, you can create a .m3u that makes the above plugin:// call, one line for each clip.  You can then create a .strm file that points to the .m3u.  XBMC can index movies and shows contained in your Google Drive account by either a .strm containing a single plugin:// call to the video, or a .strm that points to a local .m3u file that contains a list of plugin:// calls representing the video
-
-
-Roadmap to future releases:
-- support for more services
 
