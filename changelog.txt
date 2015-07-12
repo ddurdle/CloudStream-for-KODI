@@ -1,3 +1,6 @@
+Version 0.2.1
+- add: Error when runing script #8
+- add support for streamcloud.eu
 Version 0.1.0
 - add support for vidzi.tv [added 12/2014]
 - remove support for bestreams.net [removed 12/2014]
