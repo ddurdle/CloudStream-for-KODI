@@ -211,7 +211,7 @@ if mode == 'main' or mode == 'folder':
                             if domain == 'CUSTOM':
                                 cloudservice = xfilesharing.xfilesharing(instanceName, custom_domain, username, password, auth_token, user_agent)
                             else:
-                                cloudservice = xfilesharing.xfilesharing(instanceName, 'http://' + domain + '/', username, password, auth_token, user_agent)
+                                cloudservice = xfilesharing.xfilesharing(instanceName, domain, username, password, auth_token, user_agent)
                     except :
                         break
                     if count == max_count:
@@ -231,7 +231,7 @@ if mode == 'main' or mode == 'folder':
                     if domain == 'CUSTOM':
                                 cloudservice = xfilesharing.xfilesharing(instanceName, custom_domain, username, password, auth_token, user_agent)
                     else:
-                                cloudservice = xfilesharing.xfilesharing(instanceName, 'http://' + domain + '/', username, password, auth_token, user_agent)
+                                cloudservice = xfilesharing.xfilesharing(instanceName, domain, username, password, auth_token, user_agent)
 
         docontinue = 0
         try:
@@ -325,7 +325,7 @@ elif mode == 'streamurl':
             if domain == 'CUSTOM':
                 cloudservice = xfilesharing.xfilesharing(instanceName,custom_domain,username, password, auth_token, user_agent)
             else:
-                cloudservice = xfilesharing.xfilesharing(instanceName,'http://' + domain + '/',username, password, auth_token, user_agent)
+                cloudservice = xfilesharing.xfilesharing(instanceName, domain ,username, password, auth_token, user_agent)
         except :
             pass
     else:

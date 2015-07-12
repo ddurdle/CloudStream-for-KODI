@@ -68,7 +68,11 @@ class xfilesharing(cloudservice.cloudservice):
         # default User-Agent ('Python-urllib/2.6') will *not* work
         opener.addheaders = [('User-Agent', self.user_agent)]
 
-        url = self.domain
+        if 'http://' in self.domain:
+            url = self.domain
+        else:
+            url = 'http://' + self.domain + '/'
+
 
         values = {
                   'op' : 'login',
@@ -500,6 +504,10 @@ class xfilesharing(cloudservice.cloudservice):
             values['method_free'] = 'Free Download'
         elif self.domain == 'sharesix.com':
             values['method_free'] = 'Free'
+
+        elif 'streamcloud.eu' in self.domain:
+            xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(10))
+            xbmc.sleep((int(10)+1)*1000)
 
         elif self.domain == 'vidhog.com':
             xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(15))
