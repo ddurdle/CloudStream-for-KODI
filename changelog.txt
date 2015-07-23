@@ -1,3 +1,6 @@
+Version 0.2.2
+- set title on playback
+- fix thevideo.me [updated 07/2015]
 Version 0.2.1
 - add: Error when runing script #8
 - add support for streamcloud.eu

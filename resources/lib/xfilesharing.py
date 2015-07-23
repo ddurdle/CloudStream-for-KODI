@@ -266,6 +266,7 @@ class xfilesharing(cloudservice.cloudservice):
     ##
     def getPublicLink(self,url,cacheType=0):
 
+        fname = ''
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar))
         opener.addheaders = [ ('User-Agent' , self.user_agent)]
         req = urllib2.Request(url)
@@ -295,10 +296,10 @@ class xfilesharing(cloudservice.cloudservice):
                   response = opener.open(req)
               except urllib2.URLError, e:
                 log(str(e), True)
-                return
+                return ('','')
             else:
               log(str(e), True)
-              return
+              return ('','')
 
         response_data = response.read()
         response.close()
@@ -315,7 +316,7 @@ class xfilesharing(cloudservice.cloudservice):
                   response = urllib2.urlopen(req)
                 except urllib2.URLError, e:
                   log(str(e), True)
-                  return
+                  return ('','')
 
                 response_data = response.read()
                 response.close()
@@ -324,7 +325,7 @@ class xfilesharing(cloudservice.cloudservice):
         if self.domain == 'vidzi.tv':
             for r in re.finditer('(file)\: \"([^\"]+)\.mp4\"' ,response_data, re.DOTALL):
                 streamType,streamURL = r.groups()
-                return streamURL + '.mp4'
+                return (streamURL + '.mp4', fname)
 
         confirmID = 0
         values = {}
@@ -526,23 +527,23 @@ class xfilesharing(cloudservice.cloudservice):
                         response = opener.open(req, urllib.urlencode(values))
                     except urllib2.URLError, e:
                         log(str(e), True)
-                        return
+                        return ('', '')
                 else:
                     log(str(e), True)
-                    return
+                    return ('', '')
             try:
                 if response.info().getheader('Location') != '':
-                    return response.info().getheader('Location') + '|' + self.getHeadersEncoded(url)
+                    return (response.info().getheader('Location') + '|' + self.getHeadersEncoded(url), fname)
             except:
                 for r in re.finditer('\'(file)\'\,\'([^\']+)\'' ,response_data, re.DOTALL):
                     streamType,streamURL = r.groups()
-                    return streamURL  + '|' + self.getHeadersEncoded(url)
+                    return (streamURL  + '|' + self.getHeadersEncoded(url), fname)
                 for r in re.finditer('\<td (nowrap)\>([^\<]+)\<\/td\>' ,response_data, re.DOTALL):
                     deliminator,fileName = r.groups()
                 for r in re.finditer('(\|)([^\|]{42})\|' ,response_data, re.DOTALL):
                     deliminator,fileID = r.groups()
                     streamURL = 'http://cloud1.hcbit.com/cgi-bin/dl.cgi/'+fileID+'/'+fileName
-                    return streamURL  + '|' + self.getHeadersEncoded(url)
+                    return (streamURL  + '|' + self.getHeadersEncoded(url), fname)
 
         if self.domain == 'bestreams.net':
 
@@ -576,10 +577,10 @@ class xfilesharing(cloudservice.cloudservice):
                         response = opener.open(req, urllib.urlencode(values))
                     except urllib2.URLError, e:
                         log(str(e), True)
-                        return
+                        return ('','')
             else:
                     log(str(e), True)
-                    return
+                    return ('','')
 
         response_data = response.read()
         response.close()
@@ -658,7 +659,7 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('<p class="(err)"><center><b>(.*?)</b>' ,response_data, re.DOTALL):
                 id,error = r.groups()
                 xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), error)
-                return
+                return ('','')
 
 
 
@@ -682,10 +683,10 @@ class xfilesharing(cloudservice.cloudservice):
                         response = opener.open(req, urllib.urlencode(values))
                     except urllib2.URLError, e:
                         log(str(e), True)
-                        return
+                        return ('','')
                 else:
                     log(str(e), True)
-                    return
+                    return ('','')
 
             response_data = response.read()
             response.close()
@@ -727,7 +728,7 @@ class xfilesharing(cloudservice.cloudservice):
 #        return 'http://93.120.27.101:8777/pgjtbhuu6coammfvg5gfae6xogigs5cw6gsx3ey7yt6hmihwhpcixuiaqmza/v.mp4'
 
 
-        return streamURL
+        return (streamURL, fname)
 
 class MyHTTPErrorProcessor(urllib2.HTTPErrorProcessor):
 

@@ -334,8 +334,10 @@ elif mode == 'streamurl':
 
 
     # immediately play resulting (is a video)
-    videoURL = cloudservice.getPublicLink(url)
+    (videoURL,title) = cloudservice.getPublicLink(url)
     item = xbmcgui.ListItem(path=videoURL)
+    item.setInfo( type="Video", infoLabels={ "Title": title } )
+
     xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
     # update the authorization token in the configuration file if we had to login for a new one during this execution run
