@@ -1,3 +1,6 @@
+Version 0.2.3
+- add: vidzi.tv [07/2015]
+- add: letwatch.us [07/2015]
 Version 0.2.2
 - set title on playback
 - fix thevideo.me [updated 07/2015]
