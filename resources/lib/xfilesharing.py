@@ -303,6 +303,13 @@ class xfilesharing(cloudservice.cloudservice):
 
         response_data = response.read()
         response.close()
+
+        for r in re.finditer('\<title\>([^\<]+)\<',
+                             response_data, re.DOTALL | re.I):
+                  title = r.group(1)
+                  if fname == '':
+                      fname = title
+
         url = response.url
         req = urllib2.Request(url)
 
@@ -495,6 +502,7 @@ class xfilesharing(cloudservice.cloudservice):
                   'download_direct' : 1
 
              }
+
 
 
 
