@@ -563,6 +563,19 @@ class xfilesharing(cloudservice.cloudservice):
             opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookiejar))
             opener.addheaders = [ ('User-Agent' , self.user_agent), ('Referer', url), ('Cookie', 'lang=1; file_id='+file_id+'; aff='+aff+';')]
 
+        elif self.domain == 'thevideo.me':
+
+            for r in re.finditer('\,\s+\'file\'\s+\:\s+\'([^\']+)\'',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
+                  return (streamURL,fname)
+
+        elif self.domain == 'vidzi.tv':
+
+            for r in re.finditer('\s+file:\s+\"([^\"]+)\"',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
+                  return (streamURL,fname)
 
         # if action fails, validate login
         try:
@@ -632,6 +645,12 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('(file)\: \'([^\']+)\'\,' ,response_data, re.DOTALL):
                 streamType,streamURL = r.groups()
 
+        elif self.domain == 'letwatch.us':
+
+            for r in re.finditer('\|([^\|]{60})\|',
+                             response_data, re.DOTALL):
+                  fileID = r.group(1)
+                  streamURL = 'http://103.43.94.20/'+fileID+'/v.flv'
 
         elif self.domain == 'thevideo.me':
 
