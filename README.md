@@ -13,7 +13,7 @@ XFileSharing Pro
 - mightyupload.com (login & public URL) []
 - movpod.in (login & public URL) []
 - sharesix.com (login & public URL) []
-- thefile.me (login & public URL) [] [updated 12/2014]
+- thefile.me (login & public URL) [] [updated 07/2015]
 - thevideo.me (public URL) [] [updated 12/2014]
 - uptobox.com (login & public URL) []
 - vidhog.com  (login & public URL) []

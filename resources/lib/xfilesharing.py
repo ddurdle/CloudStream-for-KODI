@@ -634,14 +634,18 @@ class xfilesharing(cloudservice.cloudservice):
 
         elif self.domain == 'thevideo.me':
 
-            downloadAddress = ''
-            for r in re.finditer('\<(img) src\=\"http\:\/\/([^\/]+)\/[^\"]+\" style' ,response_data, re.DOTALL):
-                downloadTag,downloadAddress = r.groups()
+ #           downloadAddress = ''
+ #           for r in re.finditer('\<(img) src\=\"http\:\/\/([^\/]+)\/[^\"]+\" style' ,response_data, re.DOTALL):
+ #               downloadTag,downloadAddress = r.groups()
 #        return 'http://93.120.27.101:8777/pgjtbhuu6coammfvg5gfae6xogigs5cw6gsx3ey7yt6hmihwhpcixuiaqmza/v.mp4'
 
-            for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):
-                deliminator,fileID = r.groups()
-                streamURL = 'http://'+downloadAddress+'/'+fileID+'/v.mp4'
+            for r in re.finditer('\,\s+\'file\'\s+\:\s+\'([^\']+)\'',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
+
+#            for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):
+#                deliminator,fileID = r.groups()
+#                streamURL = 'http://'+downloadAddress+'/'+fileID+'/v.mp4'
 
 
 
