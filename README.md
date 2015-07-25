@@ -22,9 +22,9 @@ XFileSharing Pro
 - hcbit.com [added 09/2014]
 - www.uploadc.com (login & public URL)
 - streamcloud.eu (login & public URL) [added 07/2015]
-- letwatch.us (public URL) [ added 07/2015]
-- vidzi.tv (public URL) [ added 07/2015]
-
+- letwatch.us (login & public URL) [ added 07/2015]
+- vidzi.tv (public URL) [added 07/2015]
+- vidto.me (public URL) [added 07/2015]
 
 Supports [Tested on]:
 - XBMC 13/13.2

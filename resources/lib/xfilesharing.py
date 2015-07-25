@@ -74,9 +74,10 @@ class xfilesharing(cloudservice.cloudservice):
             url = 'http://' + self.domain + '/'
 
 
+#                  'redirect' : '',
+
         values = {
                   'op' : 'login',
-                  'redirect' : '',
                   'login' : self.user,
                   'redirect' : url,
                   'password' : self.password
@@ -100,6 +101,10 @@ class xfilesharing(cloudservice.cloudservice):
         loginResult = False
         #validate successful login
         for r in re.finditer('my_account',
+                             response_data, re.DOTALL):
+            loginResult = True
+        #validate successful login
+        for r in re.finditer('logout',
                              response_data, re.DOTALL):
             loginResult = True
 
@@ -151,6 +156,10 @@ class xfilesharing(cloudservice.cloudservice):
             url = self.domain
         else:
             url = 'http://' + self.domain
+
+        if 'streamcloud.eu' in self.domain:
+
+            url = url + '/'
 
         # retrieve all documents
         if folderID == 0:
@@ -526,6 +535,12 @@ class xfilesharing(cloudservice.cloudservice):
         elif self.domain == 'vidhog.com':
             xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(15))
             xbmc.sleep((int(15)+1)*1000)
+
+        elif self.domain == 'vidto.me':
+            xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(6))
+            xbmc.sleep((int(6)+1)*1000)
+
+
         elif self.domain == 'hcbit.com':
 
             try:
@@ -671,19 +686,15 @@ class xfilesharing(cloudservice.cloudservice):
 
         elif self.domain == 'thevideo.me':
 
- #           downloadAddress = ''
- #           for r in re.finditer('\<(img) src\=\"http\:\/\/([^\/]+)\/[^\"]+\" style' ,response_data, re.DOTALL):
- #               downloadTag,downloadAddress = r.groups()
-#        return 'http://93.120.27.101:8777/pgjtbhuu6coammfvg5gfae6xogigs5cw6gsx3ey7yt6hmihwhpcixuiaqmza/v.mp4'
-
             for r in re.finditer('\,\s+\'file\'\s+\:\s+\'([^\']+)\'',
                              response_data, re.DOTALL):
                   streamURL = r.group(1)
 
-#            for r in re.finditer('(\|)([^\|]{60})\|' ,response_data, re.DOTALL):
-#                deliminator,fileID = r.groups()
-#                streamURL = 'http://'+downloadAddress+'/'+fileID+'/v.mp4'
+        elif self.domain == 'vidto.me':
 
+            for r in re.finditer('var file_link = \'([^\']+)\'',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
 
 
 

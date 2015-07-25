@@ -65,10 +65,10 @@ class cloudservice(object):
         # if we have an authorization token set, try to use it
         if user == '':
             return
-        elif auth != '':
-          log('using token')
+#        elif auth != '':
+#          log('using token')
 
-          return
+#          return
         else:
           log('no token - logging in')
           self.login();
