@@ -147,11 +147,16 @@ class xfilesharing(cloudservice.cloudservice):
     ##
     def getVideosList(self, folderID=0, cacheType=0):
 
+        if 'http://' in self.domain:
+            url = self.domain
+        else:
+            url = 'http://' + self.domain
+
         # retrieve all documents
         if folderID == 0:
-            url = self.domain+'?op=my_files'
+            url = url+'?op=my_files'
         else:
-            url = self.domain+'?op=my_files&fld_id='+folderID
+            url = url+'?op=my_files&fld_id='+folderID
 
 
         videos = {}

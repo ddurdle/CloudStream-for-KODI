@@ -1,3 +1,5 @@
+Version 0.2.4
+- fixes: letwatch.us [07/2015]
 Version 0.2.3
 - add: vidzi.tv [07/2015]
 - add: letwatch.us [07/2015]
