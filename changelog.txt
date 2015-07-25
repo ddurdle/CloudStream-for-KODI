@@ -1,5 +1,6 @@
 - add: vidto.me [07/2015]
 - support for vidto and letwatch #6
+- add: allmyvideos.net [07/2015]
 Version 0.2.4
 - fixes: letwatch.us [07/2015]
 Version 0.2.3

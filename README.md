@@ -25,6 +25,7 @@ XFileSharing Pro
 - letwatch.us (login & public URL) [ added 07/2015]
 - vidzi.tv (public URL) [added 07/2015]
 - vidto.me (public URL) [added 07/2015]
+- allmyvideos.net (login & public URL) [added 07/2015]
 
 Supports [Tested on]:
 - XBMC 13/13.2

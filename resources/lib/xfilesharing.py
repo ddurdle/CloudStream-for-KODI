@@ -696,6 +696,11 @@ class xfilesharing(cloudservice.cloudservice):
                              response_data, re.DOTALL):
                   streamURL = r.group(1)
 
+        elif self.domain == 'allmyvideos.net':
+
+            for r in re.finditer('\"file\" : \"([^\"]+)\"',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
 
 
         timeout = 0
