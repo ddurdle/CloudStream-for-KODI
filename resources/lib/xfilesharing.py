@@ -74,14 +74,13 @@ class xfilesharing(cloudservice.cloudservice):
             url = 'http://' + self.domain + '/'
 
 
-#                  'redirect' : '',
-
         values = {
-                  'op' : 'login',
-                  'login' : self.user,
-                  'redirect' : url,
-                  'password' : self.password
-        }
+                            'op' : 'login',
+                            'login' : self.user,
+                            'redirect' : url,
+                            'password' : self.password
+                            }
+
 
 
         # try login
@@ -96,7 +95,6 @@ class xfilesharing(cloudservice.cloudservice):
             return
         response_data = response.read()
         response.close()
-
 
         loginResult = False
         #validate successful login
@@ -244,6 +242,10 @@ class xfilesharing(cloudservice.cloudservice):
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
 
+            if 'realvid.net' in self.domain:
+                for r in re.finditer('<a href="[^\"]+">([^\<]+)</a>\s+</TD>' ,
+                                 response_data, re.DOTALL):
+                    url,fileName = r.groups()
 
             #flatten folders (no clean way of handling subfolders, so just make the root list all folders & subfolders
             #therefore, skip listing folders if we're not in root
@@ -540,6 +542,11 @@ class xfilesharing(cloudservice.cloudservice):
             xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(6))
             xbmc.sleep((int(6)+1)*1000)
 
+        elif self.domain == 'vodlocker.com':
+            xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30037) + str(3))
+            xbmc.sleep((int(3)+1)*1000)
+
+
 
         elif self.domain == 'hcbit.com':
 
@@ -702,6 +709,11 @@ class xfilesharing(cloudservice.cloudservice):
                              response_data, re.DOTALL):
                   streamURL = r.group(1)
 
+        elif self.domain == 'realvid.net':
+
+            for r in re.finditer('file:\s?\'([^\']+)\'',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
 
         timeout = 0
         if op != "" and streamURL == '':
@@ -746,11 +758,13 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('<a href="([^\"]+)">(Click here to start your download)</a>' ,response_data, re.DOTALL):
                 streamURL,downloadlink = r.groups()
 
-
+        #vodlocker.com
         if streamURL == '':
             # fetch video title, download URL and docid for stream link
             for r in re.finditer('(file)\: \"([^\"]+)"\,' ,response_data, re.DOTALL):
                 streamType,streamURL = r.groups()
+                if 'mp4' in streamURL:
+                    break
 
         # mightyupload.com
         if streamURL == '':

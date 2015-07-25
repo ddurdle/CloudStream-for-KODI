@@ -18,7 +18,7 @@ XFileSharing Pro
 - uptobox.com (login & public URL) []
 - vidhog.com  (login & public URL) []
 - vidspot.net (login & public URL) [last checked 07/2015]
-- vodlocker.com [added 12/2014]
+- vodlocker.com [updated 07/2015]
 - hcbit.com [added 09/2014]
 - www.uploadc.com (login & public URL)
 - streamcloud.eu (login & public URL) [added 07/2015]
@@ -26,6 +26,7 @@ XFileSharing Pro
 - vidzi.tv (public URL) [added 07/2015]
 - vidto.me (public URL) [added 07/2015]
 - allmyvideos.net (login & public URL) [added 07/2015]
+- realvid.net (public URL) [added 07/2015]
 
 Supports [Tested on]:
 - XBMC 13/13.2
