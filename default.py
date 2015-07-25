@@ -323,6 +323,9 @@ elif mode == 'streamurl':
             save_auth  = ADDON.getSetting(instanceName+'_save_auth')
             auth_token = ADDON.getSetting(instanceName+'_auth_token')
             if domain == 'CUSTOM':
+                for r in re.finditer('http://([^\/]+)' ,
+                                 custom_domain, re.DOTALL):
+                    custom_domain = r.group(1)
                 cloudservice = xfilesharing.xfilesharing(instanceName,custom_domain,username, password, auth_token, user_agent)
             else:
                 cloudservice = xfilesharing.xfilesharing(instanceName, domain ,username, password, auth_token, user_agent)

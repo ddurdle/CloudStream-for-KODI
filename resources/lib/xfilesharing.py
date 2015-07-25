@@ -655,10 +655,14 @@ class xfilesharing(cloudservice.cloudservice):
 
         elif self.domain == 'letwatch.us':
 
+            for r in re.finditer('\[IMG\]http://([^\/]+)\/',
+                             response_data, re.DOTALL):
+                  IP = r.group(1)
+
             for r in re.finditer('\|([^\|]{60})\|',
                              response_data, re.DOTALL):
                   fileID = r.group(1)
-                  streamURL = 'http://103.43.94.20/'+fileID+'/v.flv'
+                  streamURL = 'http://'+IP+'/'+fileID+'/v.flv'
 
         elif self.domain == 'thevideo.me':
 
