@@ -1,5 +1,8 @@
 
+Version 0.2.6
 - fix: vodlocker.com [07/2015]
+- fix: uptobox.com [08/2015]
+- add: uptostream.com [08/2015]
 Version 0.2.5
 - add: vidto.me [07/2015]
 - support for vidto and letwatch #6

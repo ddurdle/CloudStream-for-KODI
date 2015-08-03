@@ -15,7 +15,7 @@ XFileSharing Pro
 - sharesix.com (login & public URL) []
 - thefile.me (login & public URL) []
 - thevideo.me (public URL) [updated 07/2014]
-- uptobox.com (login & public URL) []
+- uptobox.com (login & public URL) [updated 08/2015]
 - vidhog.com  (login & public URL) []
 - vidspot.net (login & public URL) [last checked 07/2015]
 - vodlocker.com [updated 07/2015]
@@ -27,6 +27,7 @@ XFileSharing Pro
 - vidto.me (public URL) [added 07/2015]
 - allmyvideos.net (login & public URL) [added 07/2015]
 - realvid.net (public URL) [added 07/2015]
+- uptostream.com (login & public URL) [added 08/2015]
 
 Supports [Tested on]:
 - XBMC 13/13.2

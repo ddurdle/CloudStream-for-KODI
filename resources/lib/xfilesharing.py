@@ -68,10 +68,14 @@ class xfilesharing(cloudservice.cloudservice):
         # default User-Agent ('Python-urllib/2.6') will *not* work
         opener.addheaders = [('User-Agent', self.user_agent)]
 
+        if self.domain == 'uptostream.com':
+            self.domain = 'uptobox.com'
+
         if 'http://' in self.domain:
             url = self.domain
         else:
             url = 'http://' + self.domain + '/'
+
 
 
         values = {
@@ -487,6 +491,10 @@ class xfilesharing(cloudservice.cloudservice):
              hidden,value = r.groups()
              values[variable] = value
 
+        variable = 'file_size_real'
+        for r in re.finditer('<input type="(hidden)" name="'+variable+'" value="([^\"]*)">' ,response_data, re.DOTALL):
+             hidden,value = r.groups()
+             values[variable] = value
 
         variable = 'imhuman'
         for r in re.finditer('<input type="(submit)" name="'+variable+'" value="([^\"]*)" id="btn_download">' ,response_data, re.DOTALL):
@@ -714,6 +722,18 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('file:\s?\'([^\']+)\'',
                              response_data, re.DOTALL):
                   streamURL = r.group(1)
+
+        elif self.domain == 'uptobox.com' or self.domain == 'uptostream.com':
+
+            for r in re.finditer('\<a href\=\"([^\"]+)\"\>\s+\<span class\=\"button_upload green\"\>',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
+                  return (streamURL, fname)
+
+            for r in re.finditer('\<source src=\'([^\']+)\'',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
+                  return (streamURL, fname)
 
         timeout = 0
         if op != "" and streamURL == '':
