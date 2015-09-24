@@ -1,0 +1,60 @@
+Version 0.2.7
+- fix: vodlocker.com [09/2015]
+- fix thevideo.me [updated 09/2015]
+Version 0.2.6
+- fix: vodlocker.com [07/2015]
+- fix: uptobox.com [08/2015]
+- add: uptostream.com [08/2015]
+Version 0.2.5
+- add: vidto.me [07/2015]
+- support for vidto and letwatch #6
+- add: allmyvideos.net [07/2015]
+Version 0.2.4
+- fixes: letwatch.us [07/2015]
+Version 0.2.3
+- add: vidzi.tv [07/2015]
+- add: letwatch.us [07/2015]
+Version 0.2.2
+- set title on playback
+- fix thevideo.me [updated 07/2015]
+Version 0.2.1
+- add: Error when runing script #8
+- add support for streamcloud.eu
+Version 0.1.0
+- add support for vidzi.tv [added 12/2014]
+- remove support for bestreams.net [removed 12/2014]
+- add support for vodlocker.com [added 12/2014]
+- fix/update thefile.me support [added 12/2014]
+- support for primewire plugin (external call)
+- fix/update thevideo.me support [added 12/2014]
+Version 0.0.7
+- hcbit.com - bypass captcha prompts (for non-premium users?)
+- hcbit.com - fix authorization is expired issue
+- handle subfolders without flattening them (tested with hcbit.com)
+- remove extra log statements
+Version 0.0.6
+- playback fix for: Support for hcbit.com #2
+Version 0.0.5
+- Support for hcbit.com #2
+- add support for vidspot.net (login & public URL)
+- add support for www.uploadc.com (login & public URL)
+Version 0.0.4
+- add support for filenuke.com (login & public URL)
+- add support for sharesix.com (login & public URL)
+- add support for mightyupload.com (login & public URL)
+- add support for vidhog.com  (login & public URL)
+Version 0.0.3
+- language file fix
+- add support for thevideo.me (public URL)
+- add support for sharerepo.com (login & public URL)
+- add support for uptobox.com (login & public URL)
+Version 0.0.2
+- public beta
+- add support for daclips.in (login & public URL)
+- add support for gorillavid.in (login & public URL)
+- add support for movpod.in (login & public URL)
+- add support for thefile.me (login & public URL)
+- add support for bestreams.net (login & public URL)
+- support for multiple accounts
+Version 0.0.1
+- Initial version

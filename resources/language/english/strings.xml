@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <string id="30000">CloudStream</string>
+    <string id="30001">Username</string>
+    <string id="30002">Password</string>
+    <string id="30003">Domain</string>
+	<string id="30004">User Agent</string>
+    <string id="30006">Playback Type</string>
+    <string id="30005">Save Authorization Key</string>
+    <string id="30007">Change to Modify Matching Account Record</string>
+    <string id="30008">Login</string>
+    <string id="30009">Playback</string>
+    <string id="30010">General</string>
+    <string id="30015">Set the Username and Password in addon settings before running.</string>
+    <string id="30016">You must add org.python.pydev.debug.pysrc to your PYTHONPATH.</string>
+    <string id="30017">Login information is incorrect or permission is denied</string>
+    <string id="30018">CUSTOM</string>
+    <string id="30019">Custom Domain</string>
+    <string id="30020">xfilesharing</string>
+    <string id="30021">daclips.in</string>
+    <string id="30022">flashx.tv</string>
+    <string id="30023">gorillavid.in</string>
+    <string id="30024">movpod.in</string>
+    <string id="30025">promptfile.com</string>
+    <string id="30026">thefile.me</string>
+    <string id="30030">Login Details for Account #1</string>
+    <string id="30031">Login Details for Account #2</string>
+    <string id="30032">Login Details for Account #3</string>
+    <string id="30033">Login Details for Account #4</string>
+    <string id="30034">Login Details for Account #5</string>
+    <string id="30035">Login Details for Account #6</string>
+<!-->    <string id="30027">bestreams.net</string>-->
+    <string id="30027"></string>
+    <string id="30028">uptobox.com</string>
+    <string id="30029">sharerepo.com</string>
+    <string id="30042">thevideo.me</string>
+    <string id="30036">The URL provided is not supported.</string>
+    <string id="30037">Timeout encountered.  Required to wait seconds = </string>
+    <string id="30038">Login Details for Account #7</string>
+    <string id="30039">Login Details for Account #8</string>
+    <string id="30040">Login Details for Account #9</string>
+    <string id="30041">Login Details for Account #10</string>
+    <string id="30043">filenuke.com</string>
+    <string id="30044">sharesix.com</string>
+    <string id="30045">mightyupload.com</string>
+    <string id="30046">vidhog.com</string>
+    <string id="30047">vidspot.net</string>
+    <string id="30048">www.uploadc.com</string>
+    <string id="30049">hcbit.com</string>
+    <string id="30050">vodlocker.com</string>
+    <string id="30051">vidzi.tv</string>
+    <string id="30052">streamcloud.eu</string>
+    <string id="30053">letwatch.us</string>
+    <string id="30054">vidzi.tv</string>
+    <string id="30055">vidto.me</string>
+    <string id="30056">allmyvideos.net</string>
+    <string id="30057">realvid.net</string>
+    <string id="30058">uptostream.com</string>
+
+</strings>
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="plugin.video.cloudstream" version="0.2.7" name="CloudStream" provider-name="ddurdle">
+    <requires>
+        <import addon="xbmc.python" version="2.1.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>A cloud player for various cloud-streaming services</summary>
+        <description>Stream music and video content from various cloud-streaming services supports: daclips.in, gorillavid.in, movpod.in, thefile.me, bestreams.net(broken), uptobox.com, sharerep.com, thevideo.me, filenuke.com, sharesix.com(broken), mightyupload.com, vidhog.com, vidspot.net, www.uploadc.com, hcbit.com, vidzi.tv, vodlocker.com, streamcloud.eu, letwatch.us, vidzi.tv, vidto.me, allmyvideos.net, realvid.net, uptostream.com</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+
