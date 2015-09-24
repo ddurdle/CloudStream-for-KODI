@@ -1,4 +1,6 @@
-
+Version 0.2.7
+- fix: vodlocker.com [09/2015]
+- fix thevideo.me [updated 09/2015]
 Version 0.2.6
 - fix: vodlocker.com [07/2015]
 - fix: uptobox.com [08/2015]

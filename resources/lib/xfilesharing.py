@@ -608,7 +608,14 @@ class xfilesharing(cloudservice.cloudservice):
 
         elif self.domain == 'thevideo.me':
 
-            for r in re.finditer('\,\s+\'file\'\s+\:\s+\'([^\']+)\'',
+            for r in re.finditer('\,\s+file\:\s+\'([^\']+)\'',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
+                  return (streamURL,fname)
+
+        elif self.domain == 'vodlocker.com':
+
+            for r in re.finditer('\file\:\s+\"([^\"]+v.mp4)\"',
                              response_data, re.DOTALL):
                   streamURL = r.group(1)
                   return (streamURL,fname)
@@ -701,7 +708,13 @@ class xfilesharing(cloudservice.cloudservice):
 
         elif self.domain == 'thevideo.me':
 
-            for r in re.finditer('\,\s+\'file\'\s+\:\s+\'([^\']+)\'',
+            for r in re.finditer('\,\s+file\:\s+\'([^\']+)\'',
+                             response_data, re.DOTALL):
+                  streamURL = r.group(1)
+
+        elif self.domain == 'vodlocker.com':
+
+            for r in re.finditer('\file\:\s+\"([^\"]+v.mp4)\"',
                              response_data, re.DOTALL):
                   streamURL = r.group(1)
 
