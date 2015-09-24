@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="30010">
+	  	<setting id="user_agent" type="text" label="30004" default="Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)" />
+    </category>
+
+    <category label="30020">
+    	<setting id="xfilesharing_numaccounts" type="integer" hidden="true" default="10" label="30007" />
+    	<setting id="accounts" type="labelenum" values="1|2|3|4|5|6|7|8|9|10" default="1" label="30007" />
+        <setting label="30030" visible="eq(-1,0)" type="lsep"/>
+	   	<setting id="xfilesharing1_domain" type="labelenum" label="30003" visible="eq(-2,0)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing1_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-3,0)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing1_username" type="text" label="30001" visible="eq(-4,0)" default="" />
+		<setting id="xfilesharing1_password" type="text" label="30002" visible="eq(-5,0)" option="hidden" default="" />
+		<setting id="xfilesharing1_save_auth" type="bool" label="30005" visible="eq(-6,0)" option="hidden" default="true" />
+		<setting label="30031" visible="eq(-7,1)" type="lsep"/>
+	   	<setting id="xfilesharing2_domain" type="labelenum" label="30003" visible="eq(-8,1)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing2_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-9,1)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing2_username" type="text" label="30001" visible="eq(-10,1)" default="" />
+		<setting id="xfilesharing2_password" type="text" label="30002" visible="eq(-11,1)" option="hidden" default="" />
+		<setting id="xfilesharing2_save_auth" type="bool" label="30005" visible="eq(-12,1)" option="hidden" default="true" />
+		<setting label="30032" visible="eq(-13,2)" type="lsep"/>
+	   	<setting id="xfilesharing3_domain" type="labelenum" label="30003" visible="eq(-14,2)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing3_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-15,2)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing3_username" type="text" label="30001" visible="eq(-16,2)" default="" />
+		<setting id="xfilesharing3_password" type="text" label="30002" visible="eq(-17,2)" option="hidden" default="" />
+		<setting id="xfilesharing3_save_auth" type="bool" label="30005" visible="eq(-18,2)" option="hidden" default="true" />
+		<setting label="30033" visible="eq(-19,3)" type="lsep"/>
+	   	<setting id="xfilesharing4_domain" type="labelenum" label="30003" visible="eq(-20,3)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing4_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-21,3)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing4_username" type="text" label="30001" visible="eq(-22,3)" default="" />
+		<setting id="xfilesharing4_password" type="text" label="30002" visible="eq(-23,3)" option="hidden" default="" />
+		<setting id="xfilesharing4_save_auth" type="bool" label="30005" visible="eq(-24,3)" option="hidden" default="true" />
+		<setting label="30034" visible="eq(-25,4)" type="lsep"/>
+	   	<setting id="xfilesharing5_domain" type="labelenum" label="30003" visible="eq(-26,4)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing5_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-27,4)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing5_username" type="text" label="30001" visible="eq(-28,4)" default="" />
+		<setting id="xfilesharing5_password" type="text" label="30002" visible="eq(-29,4)" option="hidden" default="" />
+		<setting id="xfilesharing5_save_auth" type="bool" label="30005" visible="eq(-30,4)" option="hidden" default="true" />
+		<setting label="30035" visible="eq(-31,5)" type="lsep"/>
+	   	<setting id="xfilesharing6_domain" type="labelenum" label="30003" visible="eq(-32,5)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing6_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-33,5)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing6_username" type="text" label="30001" visible="eq(-34,5)" default="" />
+		<setting id="xfilesharing6_password" type="text" label="30002" visible="eq(-35,5)" option="hidden" default="" />
+		<setting id="xfilesharing6_save_auth" type="bool" label="30005" visible="eq(-36,5)" option="hidden" default="true" />
+		<setting label="30038" visible="eq(-37,6)" type="lsep"/>
+	   	<setting id="xfilesharing7_domain" type="labelenum" label="30003" visible="eq(-38,6)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing7_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-39,6)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing7_username" type="text" label="30001" visible="eq(-40,6)" default="" />
+		<setting id="xfilesharing7_password" type="text" label="30002" visible="eq(-41,6)" option="hidden" default="" />
+		<setting id="xfilesharing7_save_auth" type="bool" label="30005" visible="eq(-42,6)" option="hidden" default="true" />
+		<setting label="30039" visible="eq(-43,7)" type="lsep"/>
+	   	<setting id="xfilesharing8_domain" type="labelenum" label="30003" visible="eq(-44,7)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing8_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-45,7)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing8_username" type="text" label="30001" visible="eq(-46,7)" default="" />
+		<setting id="xfilesharing8_password" type="text" label="30002" visible="eq(-47,7)" option="hidden" default="" />
+		<setting id="xfilesharing8_save_auth" type="bool" label="30005" visible="eq(-48,7)" option="hidden" default="true" />
+		<setting label="30040" visible="eq(-49,8)" type="lsep"/>
+	   	<setting id="xfilesharing9_domain" type="labelenum" label="30003" visible="eq(-50,8)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing9_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-51,8)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing9_username" type="text" label="30001" visible="eq(-52,8)" default="" />
+		<setting id="xfilesharing9_password" type="text" label="30002" visible="eq(-53,8)" option="hidden" default="" />
+		<setting id="xfilesharing9_save_auth" type="bool" label="30005" visible="eq(-54,8)" option="hidden" default="true" />
+		<setting label="30041" visible="eq(-55,9)" type="lsep"/>
+	   	<setting id="xfilesharing10_domain" type="labelenum" label="30003" visible="eq(-56,9)" lvalues="30021|30027|30023|30024|30025|30026|30018|30027|30028|30029|30042|30043|30044|30045|30046|30047|30048|30049|30050|30051|30052|30053|30054|30055|30056|30057|30058" default="0"/>
+	   	<setting id="xfilesharing10_domain_custom" type="text" label="30019" subsetting="true" visible="eq(-57,9)" enable="eq(-1,6)" default="http://www.custom.com"/>
+	   	<setting id="xfilesharing10_username" type="text" label="30001" visible="eq(-58,9)" default="" />
+		<setting id="xfilesharing10_password" type="text" label="30002" visible="eq(-59,9)" option="hidden" default="" />
+		<setting id="xfilesharing10_save_auth" type="bool" label="30005" visible="eq(-60,9)" option="hidden" default="true" />
+    </category>
+</settings>
