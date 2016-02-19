@@ -73,17 +73,29 @@ class xfilesharing(cloudservice.cloudservice):
 
         if 'http://' in self.domain:
             url = self.domain
+            values = {
+                                'op' : 'login',
+                                'login' : self.user,
+                                'redirect' : url,
+                                'password' : self.password
+                                }
+        elif self.domain == 'uptobox.com':
+            url = 'http://' + self.domain + '/log'
+            values = {
+                                'op' : 'login',
+                                'login' : self.user,
+                                'password' : self.password
+                                }
+
         else:
             url = 'http://' + self.domain + '/'
 
-
-
-        values = {
-                            'op' : 'login',
-                            'login' : self.user,
-                            'redirect' : url,
-                            'password' : self.password
-                            }
+            values = {
+                                'op' : 'login',
+                                'login' : self.user,
+                                'redirect' : url,
+                                'password' : self.password
+                                }
 
 
 
@@ -238,7 +250,7 @@ class xfilesharing(cloudservice.cloudservice):
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
 
             # video-entry - uptobox
-            for r in re.finditer('<td style="[^\"]+"><a href="([^\"]+)".*?>([^\<]+)</a></td>' ,
+            for r in re.finditer('<td><a href="([^\"]+)".*?>([^\<]+)</a></td>' ,
                                  response_data, re.DOTALL):
                 url,fileName = r.groups()
 
@@ -745,7 +757,7 @@ class xfilesharing(cloudservice.cloudservice):
 
             for r in re.finditer('\<source src=\'([^\']+)\'',
                              response_data, re.DOTALL):
-                  streamURL = r.group(1)
+                  streamURL = 'http:' + r.group(1)
                   return (streamURL, fname)
 
         timeout = 0
