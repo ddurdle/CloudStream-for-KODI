@@ -71,19 +71,20 @@ class xfilesharing(cloudservice.cloudservice):
         if self.domain == 'uptostream.com':
             self.domain = 'uptobox.com'
 
-        if 'http://' in self.domain:
+        if self.domain == 'uptobox.com':
+            url = 'https://login.uptobox.com/logarithme'
+            values = {
+                                'op' : 'login',
+                                'login' : self.user,
+                                'password' : self.password
+                                }
+
+        elif 'http://' in self.domain:
             url = self.domain
             values = {
                                 'op' : 'login',
                                 'login' : self.user,
                                 'redirect' : url,
-                                'password' : self.password
-                                }
-        elif self.domain == 'uptobox.com':
-            url = 'https://login.uptobox.com/log'
-            values = {
-                                'op' : 'login',
-                                'login' : self.user,
                                 'password' : self.password
                                 }
 
@@ -107,7 +108,11 @@ class xfilesharing(cloudservice.cloudservice):
             if e.code == 403:
                 #login denied
                 xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30017))
+            elif e.code == 502:
+                #login denied
+                xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30059))
             log(str(e), True)
+            self.isLogin = False
             return
         response_data = response.read()
         response.close()
@@ -117,10 +122,12 @@ class xfilesharing(cloudservice.cloudservice):
         for r in re.finditer('OK',
                              response_data, re.DOTALL):
             loginResult = True
+            self.isLogin = True
 
         if (loginResult == False):
             xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30017))
             log('login failed', True)
+            self.isLogin = False
             return
 
         for cookie in self.cookiejar:

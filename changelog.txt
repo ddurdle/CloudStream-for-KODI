@@ -1,3 +1,5 @@
+v0.3.2 (2016-03-01)
+- add wrapper for Bad Gateway
 v0.3.1 (2016-02-29)
 - login fix for uptobox.com
 v0.3.0 (2016-02-18)

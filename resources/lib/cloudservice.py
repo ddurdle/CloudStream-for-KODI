@@ -60,6 +60,7 @@ class cloudservice(object):
         self.auth = auth
         self.user_agent = user_agent
         self.cookiejar = cookielib.CookieJar()
+        self.isLogin = False
 
 
         # if we have an authorization token set, try to use it

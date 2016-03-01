@@ -242,7 +242,7 @@ if mode == 'main' or mode == 'folder':
             #log(addon.getLocalizedString(30050)+ 'gdrive-login', True)
             xbmcplugin.endOfDirectory(plugin_handle)
 
-        if docontinue:
+        if docontinue and cloudservice.isLogin:
             cacheType = ADDON.getSetting('playback_type')
 
             singlePlayback=''
