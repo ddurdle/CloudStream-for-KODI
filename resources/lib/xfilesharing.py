@@ -80,7 +80,7 @@ class xfilesharing(cloudservice.cloudservice):
                                 'password' : self.password
                                 }
         elif self.domain == 'uptobox.com':
-            url = 'http://' + self.domain + '/log'
+            url = 'https://login.uptobox.com/log'
             values = {
                                 'op' : 'login',
                                 'login' : self.user,
@@ -114,11 +114,7 @@ class xfilesharing(cloudservice.cloudservice):
 
         loginResult = False
         #validate successful login
-        for r in re.finditer('my_account',
-                             response_data, re.DOTALL):
-            loginResult = True
-        #validate successful login
-        for r in re.finditer('logout',
+        for r in re.finditer('OK',
                              response_data, re.DOTALL):
             loginResult = True
 

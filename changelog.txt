@@ -1,3 +1,5 @@
+v0.3.1 (2016-02-29)
+- login fix for uptobox.com
 v0.3.0 (2016-02-18)
 - fix: uptobox.com (contribution by sarped0n)
 - Issue Its uptobox and uptostream #11
