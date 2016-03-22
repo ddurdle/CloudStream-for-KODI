@@ -24,13 +24,16 @@ import re
 import urllib, urllib2
 import cookielib
 
+try:
+    import xbmc, xbmcaddon, xbmcgui, xbmcplugin
+except: pass
 
-import xbmc, xbmcaddon, xbmcgui, xbmcplugin
-
-# global variables
-PLUGIN_NAME = 'plugin.video.cloudstream'
-PLUGIN_URL = 'plugin://'+PLUGIN_NAME+'/'
-ADDON = xbmcaddon.Addon(id=PLUGIN_NAME)
+try:
+    # global variables
+    PLUGIN_NAME = 'plugin.video.cloudstream'
+    PLUGIN_URL = 'plugin://'+PLUGIN_NAME+'/'
+    ADDON = xbmcaddon.Addon(id=PLUGIN_NAME)
+except: pass
 
 # helper methods
 def log(msg, err=False):
