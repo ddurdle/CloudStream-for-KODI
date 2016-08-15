@@ -1,3 +1,5 @@
+v0.3.3 (2016-08-15)
+- fix for thevideo.me
 v0.3.2 (2016-03-01)
 - add wrapper for Bad Gateway
 v0.3.1 (2016-02-29)
