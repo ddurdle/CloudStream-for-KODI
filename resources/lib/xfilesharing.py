@@ -729,6 +729,7 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('\,\s+file\:\s+\'([^\']+)\'',
                              response_data, re.DOTALL):
                   streamURL = r.group(1)
+                  streamURL = streamURL + '?direct=false&ua=1'
 
         elif self.domain == 'vodlocker.com':
 
