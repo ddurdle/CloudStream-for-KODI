@@ -29,9 +29,10 @@ XFileSharing Pro
 - realvid.net (public URL) [added 07/2015]
 - uptostream.com (login & public URL) [added 08/2015]
 
+
 Supports [Tested on]:
 - XBMC 13/13.2
-- KODI 14 / 15
+- KODI 14 / 15 16 / 16.1
 * including Linux, Windows, OS X, Android, Pivos, iOS (including ATV2), Raspberry Pi, OSMC
 
 
