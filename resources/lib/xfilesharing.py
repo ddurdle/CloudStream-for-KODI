@@ -769,13 +769,16 @@ class xfilesharing(cloudservice.cloudservice):
             for r in re.finditer('\<a href\=\"([^\"]+)\"\>\s+\<span class\=\"button_upload green\"\>',
                              response_data, re.DOTALL):
                   streamURL = r.group(1)
+                  fname = re.sub('Download ', '', fname)
+
                   return (streamURL, fname)
 
             for r in re.finditer('\<source src=\'([^\']+)\'',
                              response_data, re.DOTALL):
                   streamURL = 'http:' + r.group(1)
-                  return (streamURL, fname)
+                  fname = re.sub('Download ', '', fname)
 
+                  return (streamURL, fname)
         timeout = 0
         if op != "" and streamURL == '':
             for r in re.finditer('Wait<strong><span id="(.*?)">(\d+)</span> seconds</strong>' ,response_data, re.DOTALL):
