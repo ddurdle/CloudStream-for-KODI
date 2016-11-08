@@ -1,3 +1,5 @@
+v0.3.4 (2016-08-15)
+- add support for folders for uptobox.com/uptostream.com
 v0.3.3 (2016-08-15)
 - fix for thevideo.me
 v0.3.2 (2016-03-01)

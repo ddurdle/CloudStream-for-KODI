@@ -263,6 +263,15 @@ class xfilesharing(cloudservice.cloudservice):
 
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
+            # folder-entry - uptobox
+            for r in re.finditer('<a href=".*?fld_id=([^\"]+)" [^\s]+>([^\<]+)</a></td>' ,
+                                 response_data, re.DOTALL):
+                    folderID,folderName = r.groups()
+
+                    # folder
+                    if int(folderID) != 0 and folderName != '&nbsp;. .&nbsp;':
+                        videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
+
 
             if 'realvid.net' in self.domain:
                 for r in re.finditer('<a href="[^\"]+">([^\<]+)</a>\s+</TD>' ,
