@@ -33,6 +33,7 @@ XFileSharing Pro
 Supports [Tested on]:
 - XBMC 13/13.2
 - KODI 14 / 15 16 / 16.1
+- KODI 17 BETA 7 (tested and confirmed working)
 * including Linux, Windows, OS X, Android, Pivos, iOS (including ATV2), Raspberry Pi, OSMC
 
 
