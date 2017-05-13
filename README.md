@@ -15,7 +15,7 @@ XFileSharing Pro
 - sharesix.com (login & public URL) []
 - thefile.me (login & public URL) []
 - thevideo.me (public URL) [updated 07/2014]
-- uptobox.com (login & public URL) [updated 08/2015]
+- uptobox.com (login & public URL) [updated 08/2015 - validate 05/2017]
 - vidhog.com  (login & public URL) []
 - vidspot.net (login & public URL) [last checked 07/2015]
 - vodlocker.com [updated 07/2015]
