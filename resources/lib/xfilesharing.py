@@ -766,7 +766,7 @@ class xfilesharing(cloudservice.cloudservice):
 
         elif self.domain == 'uptobox.com' or self.domain == 'uptostream.com':
 
-            for r in re.finditer('\<a href\=\"([^\"]+)\"\>\s+\<span class\=\"button_upload green\"\>',
+            for r in re.finditer('\<a href\=\"([^\"]+)\"\s+class\=\'big-button-green-flat mt-4 mb-4\'',
                              response_data, re.DOTALL):
                   streamURL = r.group(1)
                   fname = re.sub('Download ', '', fname)
