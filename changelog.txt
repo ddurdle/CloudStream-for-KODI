@@ -1,5 +1,5 @@
 v0.3.8 (2018-08-22)
-Login incorrect uptobox.com #22
+- community contribution - Login incorrect uptobox.com #22
 v0.3.6 (2018-02-18)
 - uptobox streaming fix by sarped0n
 v0.3.6 (2016-11-11)
