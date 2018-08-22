@@ -75,9 +75,8 @@ class xfilesharing(cloudservice.cloudservice):
             self.domain = 'uptobox.com'
 
         if self.domain == 'uptobox.com':
-            url = 'https://login.uptobox.com/logarithme'
+            url = 'https://uptobox.com/?op=login&referer=homepage'
             values = {
-                                'op' : 'login',
                                 'login' : self.user,
                                 'password' : self.password
                                 }
@@ -121,12 +120,18 @@ class xfilesharing(cloudservice.cloudservice):
         response.close()
 
         loginResult = False
+        
         #validate successful login
-        for r in re.finditer('OK',
-                             response_data, re.DOTALL):
-            loginResult = True
+        if self.domain == 'uptobox.com':
+            loginResult = "my files" in response_data.lower()
             self.isLogin = True
+        else:
+            for r in re.finditer('OK',
+                                 response_data, re.DOTALL):
+                loginResult = True
+                self.isLogin = True
 
+        
         if (loginResult == False):
             xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30017))
             log('login failed', True)
@@ -263,13 +268,14 @@ class xfilesharing(cloudservice.cloudservice):
 
                 # streaming
                 videos[fileName] = {'url': 'plugin://plugin.video.cloudstream?mode=streamURL&instance='+self.instanceName+'&url=' + url, 'mediaType' : self.MEDIA_TYPE_VIDEO}
+            
             # folder-entry - uptobox
             for r in re.finditer('<a href=".*?fld_id=([^\"]+)" [^\s]+>([^\<]+)</a></td>' ,
                                  response_data, re.DOTALL):
                     folderID,folderName = r.groups()
 
                     # folder
-                    if int(folderID) != 0 and folderName != '&nbsp;. .&nbsp;':
+                    if int(folderID) != 0 and not folderName.startswith('&nbsp;.'):
                         videos[folderName] = {'url': 'plugin://plugin.video.cloudstream?mode=folder&instance='+self.instanceName+'&folderID=' + folderID, 'mediaType' : self.MEDIA_TYPE_FOLDER}
 
 
