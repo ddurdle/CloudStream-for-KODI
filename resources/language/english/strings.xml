@@ -58,6 +58,8 @@
     <string id="30058">uptostream.com</string>
 
     <string id="30059">Gateway error</string>
+    <string id="30060">Play all (top level videos)</string>
+    <string id="30061">It sounds like there is no video at the top level of this directory, please, try an other one !</string>
 
 </strings>
 

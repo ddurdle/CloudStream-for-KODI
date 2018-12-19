@@ -64,6 +64,8 @@ def addDirectory(url, title, img='', fanart='', total_items=0):
     if not fanart:
         fanart = ADDON.getAddonInfo('path') + '/fanart.jpg'
     listitem.setProperty('fanart_image', fanart)
+    cmd = [( ADDON.getLocalizedString(30060), 'XBMC.RunPlugin("%s&playall=True")' % url, )]
+    listitem.addContextMenuItems(cmd)
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem,
                                 isFolder=True, totalItems=total_items)
 
@@ -269,7 +271,21 @@ if mode == 'main' or mode == 'folder':
             # update the authorization token in the configuration file if we had to login for a new one during this execution run
             if auth_token != cloudservice.auth and save_auth == 'true':
                 ADDON.setSetting(cloudservice.instanceName+'_auth_token', cloudservice.auth)
-
+    
+        # Contextual playall 
+        if "playall" in plugin_queries:            
+            play=xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+            for title in sorted(videos.iterkeys()):
+                if videos[title]['mediaType'] == cloudservice.MEDIA_TYPE_VIDEO:
+                    # Add video to playlist
+                    listitem = xbmcgui.ListItem(title)
+                    listitem.setInfo('video', {'Title': title})
+                    play.add(url=videos[title]["url"], listitem=listitem)
+            if play.size() > 0:
+                xbmc.Player().play(play) 
+            else:
+                xbmcgui.Dialog().ok(ADDON.getLocalizedString(30000), ADDON.getLocalizedString(30061))
+   
 
 #force stream - play a video given its exact-title
 elif mode == 'streamvideo':
